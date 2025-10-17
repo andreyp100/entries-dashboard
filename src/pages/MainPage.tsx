@@ -3,10 +3,17 @@ import {Button, Flex} from 'antd'
 import MainTable from './components/MainTable'
 import {PlusOutlined} from '@ant-design/icons'
 import { NewEntryModal } from './components/NewEntryModal'
+import { useEntryStore, useFetchStore } from '../store/store'
 
 export const MainPage = () => {
 
   const [newEntryModalOpen, setNewEntryModalOpen] = React.useState<boolean>(false);
+  const entryStore = useEntryStore()
+  const {getEntries} = useFetchStore()
+
+  React.useEffect(() => {
+    getEntries()
+  }, [])
 
 
   return (
@@ -15,7 +22,6 @@ export const MainPage = () => {
         style={{
           maxWidth: "5vw",
         }}
-        // type='primary'
         variant='solid'
         color='cyan'
         icon={<PlusOutlined />}

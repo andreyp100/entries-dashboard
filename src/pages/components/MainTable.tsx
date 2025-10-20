@@ -58,7 +58,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
 const MainTable: React.FC = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState<IEntry[]>(originData);
+  const [data, setData] = useState<IEntry[]>([]);
   const [editingKey, setEditingKey] = useState('');
 
   const isEditing = (record: IEntry) => record.id.toString() === editingKey;
@@ -101,12 +101,13 @@ const MainTable: React.FC = () => {
     },
   ];
 
-  const mergedColumns: TableProps<IEntry>['columns'] = columns.map((col) => {
+  const mergedColumns: TableProps<IEntry>['columns'] = columns.map((col, i) => {
     if (!col.editable) {
       return col;
     }
     return {
       ...col,
+      key: i,
       onCell: (record: IEntry) => ({
         record,
         inputType: col.dataIndex === 'age' ? 'number' : 'text',

@@ -13,6 +13,8 @@ export const MainPage = () => {
 
   React.useEffect(() => {
     getEntries()
+    // if (entryStore.status !== "loading"){
+    // }
   }, [])
 
 

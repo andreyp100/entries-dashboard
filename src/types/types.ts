@@ -1,3 +1,14 @@
+export type TFetchStatus = "idle" | "loading" | "success" | "error";
+
+export type TApiMethod<T = undefined> = (data?: T | any) => Promise<void>
+
+export interface IApiRequestConfig<T = any> {
+  method: "get" | "post" | "delete",
+  endpoint: string,
+  data?: T,
+  entryStoreMethod: (data:IEntry | IEntry[] | number | any) => void
+}
+
 export interface IEntry {
   id: number,
   date: number,
@@ -8,9 +19,12 @@ export interface IEntry {
 
 export interface IEntryStore {
   entries: IEntry[],
+  updateEntries: (entries: IEntry[]) => void;
   addEntry: (entry: IEntry) => void,
   removeEntry: (entryId: number) => void,
   categories: IEntry["category"][];
+  status: TFetchStatus
+  setStatus: (status: TFetchStatus) => void;
 }
 
 export type TNewEntry  = Omit<IEntry, "id">
@@ -21,7 +35,10 @@ export interface IModalProps {
 }
 
 export interface IFetchStore {
-  getEntries: () => void,
-  addEntry: (entry: IEntry) => IEntry,
-  removeEntry: (entryId: number) => void
+  getEntries: TApiMethod,
+  addEntry: TApiMethod<IEntry>,
+  removeEntry: TApiMethod<number>
 }
+
+
+

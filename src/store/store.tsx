@@ -23,10 +23,15 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
     const apiAddress = `${import.meta.env.VITE_DB_ADDRESS}:${import.meta.env.VITE_DB_PORT}`;
     const {method, endpoint, data, entryStoreMethod} = requestConfig;
 
+    console.log({method, endpoint, data, entryStoreMethod});
+    
+
     useEntryStore.getState().setStatus("loading")
 
     try{
-      const response = await axios[method](`${apiAddress}${endpoint}`, data)
+      console.log("data: ", data);
+      
+      const response = await axios[method](`${apiAddress}${endpoint}`, data, )
       useEntryStore.getState().updateEntries(response.data)
       entryStoreMethod(response.data)
       useEntryStore.getState().setStatus("success")    

@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { Card, DatePicker, Form, Input, Modal, Select } from 'antd'
 import type { IModalProps, IEntry, TNewEntry } from '../../types/types'
-import { useEntryStore } from '../../store/store'
+import { useEntryStore, useFetchStore } from '../../store/store'
 import dayjs from 'dayjs'
 
 export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
 
   const entryStore = useEntryStore()
+  const fetchStore = useFetchStore()
+
   const initialFormState: TNewEntry = {
     date: Date.now(),
     name: "",
@@ -18,8 +20,12 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
   const handleChangeFormState = (field: keyof TNewEntry, value: string | number) => {
     setFormState({
       ...formState,
-      [field]: value
+      [field]: field !== "sum" ? value : parseFloat(value as string)
     })
+  }
+
+  const handleSubmitNewEntryForm = () => {
+    fetchStore.addEntry({"Id": 100, "Name": "Test Entry", "Sum": 100})
   }
 
   React.useEffect(() => {
@@ -35,7 +41,10 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
       }}
       title="new entry"
       okButtonProps={{
-        onClick: () => console.log("formState: ", formState)
+        onClick: () => {
+          handleSubmitNewEntryForm()
+          console.log("formState: ", formState)
+        }
       }}
     >
         <Form

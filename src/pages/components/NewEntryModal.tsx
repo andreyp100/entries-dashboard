@@ -84,7 +84,7 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
             <Select>
               {
                 entryStore.categories.map((c: IEntry["category"], i: number) => (
-                  <Select.Option key={i}>{c}</Select.Option>
+                  <Select.Option key={i}>{c.name}</Select.Option>
                 ))
               }
             </Select>

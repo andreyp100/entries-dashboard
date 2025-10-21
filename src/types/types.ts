@@ -23,7 +23,7 @@ export interface IEntry {
   date: number,
   name: string,
   sum: number | '',
-  category: string
+  category: {name: string, id: number}
 }
 
 export interface IEntryStore {
@@ -37,7 +37,7 @@ export interface IEntryStore {
   setStatus: (status: TFetchStatus) => void;
 }
 
-export type TNewEntry  = Omit<IEntry, "id">
+export type TNewEntry  = Omit<IEntry, "id" | "category"> & {category: string}
 
 export interface IModalProps {
   name: string,

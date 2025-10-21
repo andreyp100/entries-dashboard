@@ -6,14 +6,6 @@ import { useEntryStore, useModalStore } from '../../store/store';
 import {PlusOutlined} from '@ant-design/icons'
 
 
-const originData = Array.from({ length: 100 }).map<IEntry>((_, i) => ({
-  id: i,
-  date: Date.now(),
-  sum: Math.floor(Math.random() * 1000),
-  category: "123",
-  name: `Edward ${i}`,
-}));
-
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;

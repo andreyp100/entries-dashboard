@@ -1,14 +1,20 @@
 import { Form, Input, Modal } from 'antd'
 import * as React from 'react'
 import type { IModalProps } from '../../types/types'
+import { useFetchStore } from '../../store/store'
 
 export const NewCategoryModal = ({isOpen, setOpenState}: IModalProps) => {
 
   const [name, setName] = React.useState<string>("")
+  const {addCategory} = useFetchStore()
 
   const handleSubmitNewCategoryName = () => {
-
+    name && addCategory(name)
   }
+
+  React.useEffect(() => {
+    setName("")
+  }, [isOpen])
 
   return (
     <Modal
@@ -20,20 +26,21 @@ export const NewCategoryModal = ({isOpen, setOpenState}: IModalProps) => {
           handleSubmitNewCategoryName()
         }
       }}
+      width={400}
       >
         <Form
-          labelCol={{span: 4}}
-          wrapperCol={{span: 14}}
+          wrapperCol={{span: 30}}
           style={{
             maxWidth: 600,
             marginTop: 30
           }}>
-            <Form.Item label="name">
+            <Form.Item>
               <Input 
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
+                placeholder='name'
               />
             </Form.Item>
           

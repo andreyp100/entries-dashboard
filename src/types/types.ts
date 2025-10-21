@@ -6,6 +6,8 @@ export interface IFetchStore {
   getEntries: TApiMethod,
   addEntry: TApiMethod<IEntry>,
   removeEntry: TApiMethod<number>
+  getCategories: TApiMethod,
+  addCategory: TApiMethod<string>
 }
 
 export interface IApiRequestConfig<T = any> {
@@ -30,6 +32,7 @@ export interface IEntryStore {
   addEntry: (entry: IEntry) => void,
   removeEntry: (entryId: number) => void,
   categories: IEntry["category"][];
+  updateCategories: (categories: IEntry["category"][]) => void,
   status: TFetchStatus
   setStatus: (status: TFetchStatus) => void;
 }

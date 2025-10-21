@@ -49,7 +49,7 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
     >
         <Form
           labelCol={{span: 4}}
-          wrapperCol={{span: 14}}
+          wrapperCol={{span: 16}}
           style={{
             maxWidth: 600,
             marginTop: 30,

@@ -10,11 +10,12 @@ export const MainPage = () => {
 
   const entryStore = useEntryStore()
   const modalStore = useModalStore()
-  const {getEntries} = useFetchStore()
+  const {getEntries, getCategories} = useFetchStore()
 
   React.useEffect(() => {
+    getEntries()
+    getCategories()
     if (entryStore.status !== "loading"){
-      getEntries()
     }
   }, [])
 

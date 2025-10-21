@@ -9,8 +9,9 @@ export const useEntryStore = create<IEntryStore>((set, get) => {
     entries: [],
     addEntry: (entry:IEntry) => set((state) => ({entries: [...state.entries, entry]})),
     removeEntry: (entryId: number) => set((state) => ({entries: [...state.entries.filter(e => e.id != entryId)]})),
-    updateEntries: (entries: IEntry[]) => set(() => ({entries: entries}) ),
-    categories: []
+    updateEntries: (entries: IEntry[]) => set(() => ({entries}) ),
+    categories: [],
+    updateCategories: (categories: IEntry["category"][]) => set(() => ({categories}))
   }
 })
 
@@ -21,8 +22,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
   const apiRequest = async (requestConfig: IApiRequestConfig): Promise<void> => {
     
     const apiAddress = `${import.meta.env.VITE_DB_ADDRESS}:${import.meta.env.VITE_DB_PORT}`;
-    const {method, endpoint, data, entryStoreMethod, updateAfterRequest} = requestConfig;
-    
+    const {method, endpoint, data, entryStoreMethod, updateAfterRequest} = requestConfig;    
 
     useEntryStore.getState().setStatus("loading")
 
@@ -31,9 +31,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
       entryStoreMethod(response.data)
       updateAfterRequest && get().getEntries()
       useEntryStore.getState().setStatus("success")
-    } catch (err: any){
-      console.log("err: ", err);
-      
+    } catch (err: any){      
       useEntryStore.getState().setStatus("error")
     }
   }
@@ -57,6 +55,17 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         data: entryId,
         entryStoreMethod: useEntryStore.getState().removeEntry,
         updateAfterRequest: true
+      }),
+      getCategories: () => apiRequest({
+        method: "get",
+        endpoint: "/categories/list",
+        entryStoreMethod: useEntryStore.getState().updateCategories
+      }),
+      addCategory: (categoryName: string) => apiRequest({
+        method: "post",
+        endpoint: "/category/add",
+        data: categoryName,
+        entryStoreMethod: useEntryStore.getState().updateCategories
       })
     }
 })

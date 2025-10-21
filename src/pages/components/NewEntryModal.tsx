@@ -1,12 +1,14 @@
 import * as React from 'react'
-import { Card, DatePicker, Form, Input, Modal, Select } from 'antd'
+import { DatePicker, Form, Input, Modal, Select } from 'antd'
 import type { IModalProps, IEntry, TNewEntry } from '../../types/types'
-import { useEntryStore } from '../../store/store'
+import { useEntryStore, useFetchStore } from '../../store/store'
 import dayjs from 'dayjs'
 
-export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
+export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
 
   const entryStore = useEntryStore()
+  const fetchStore = useFetchStore()
+
   const initialFormState: TNewEntry = {
     date: Date.now(),
     name: "",
@@ -18,8 +20,12 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
   const handleChangeFormState = (field: keyof TNewEntry, value: string | number) => {
     setFormState({
       ...formState,
-      [field]: value
+      [field]: field !== "sum" ? value : parseFloat(value as string)
     })
+  }
+
+  const handleSubmitNewEntryForm = () => {
+    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && setOpenState(false))
   }
 
   React.useEffect(() => {
@@ -33,14 +39,17 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
       onCancel={() => {
         setOpenState(false)
       }}
-      title="new entry"
+      title={name}
       okButtonProps={{
-        onClick: () => console.log("formState: ", formState)
+        onClick: () => {
+          handleSubmitNewEntryForm()
+          console.log("formState: ", formState)
+        }
       }}
     >
         <Form
           labelCol={{span: 4}}
-          wrapperCol={{span: 14}}
+          wrapperCol={{span: 16}}
           style={{
             maxWidth: 600,
             marginTop: 30,
@@ -75,7 +84,7 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
             <Select>
               {
                 entryStore.categories.map((c: IEntry["category"], i: number) => (
-                  <Select.Option key={i}>{c}</Select.Option>
+                  <Select.Option key={i}>{c.name}</Select.Option>
                 ))
               }
             </Select>

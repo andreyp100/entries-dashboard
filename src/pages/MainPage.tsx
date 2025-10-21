@@ -3,10 +3,21 @@ import {Button, Flex} from 'antd'
 import MainTable from './components/MainTable'
 import {PlusOutlined} from '@ant-design/icons'
 import { NewEntryModal } from './components/NewEntryModal'
+import { useEntryStore, useFetchStore, useModalStore } from '../store/store'
+import { NewCategoryModal } from './components/NewCategoryModal'
 
 export const MainPage = () => {
 
-  const [newEntryModalOpen, setNewEntryModalOpen] = React.useState<boolean>(false);
+  const entryStore = useEntryStore()
+  const modalStore = useModalStore()
+  const {getEntries, getCategories} = useFetchStore()
+
+  React.useEffect(() => {
+    getEntries()
+    getCategories()
+    if (entryStore.status !== "loading"){
+    }
+  }, [])
 
 
   return (
@@ -15,16 +26,21 @@ export const MainPage = () => {
         style={{
           maxWidth: "5vw",
         }}
-        // type='primary'
         variant='solid'
         color='cyan'
         icon={<PlusOutlined />}
-        onClick={() => setNewEntryModalOpen(true)}
+        onClick={() => modalStore.newEntry.setOpenState(true)}
         />
       <MainTable />
       <NewEntryModal
-        isOpen={newEntryModalOpen}
-        setOpenState={setNewEntryModalOpen}
+        name="newEntry"
+        isOpen={modalStore.newEntry.isOpen}
+        setOpenState={modalStore.newEntry.setOpenState}
+      />
+      <NewCategoryModal 
+        name="newCategory"
+        isOpen={modalStore.newCategory.isOpen}
+        setOpenState={modalStore.newCategory.setOpenState}
       />
     </Flex>
   )

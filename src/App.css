@@ -41,3 +41,9 @@
 .read-the-docs {
   color: #888;
 }
+
+.flexTableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}

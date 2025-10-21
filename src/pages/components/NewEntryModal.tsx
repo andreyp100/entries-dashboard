@@ -4,7 +4,7 @@ import type { IModalProps, IEntry, TNewEntry } from '../../types/types'
 import { useEntryStore, useFetchStore } from '../../store/store'
 import dayjs from 'dayjs'
 
-export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
+export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
 
   const entryStore = useEntryStore()
   const fetchStore = useFetchStore()
@@ -25,7 +25,7 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
   }
 
   const handleSubmitNewEntryForm = () => {
-    fetchStore.addEntry(formState).then(() => setOpenState(false))
+    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && setOpenState(false))
   }
 
   React.useEffect(() => {
@@ -39,7 +39,7 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
       onCancel={() => {
         setOpenState(false)
       }}
-      title="new entry"
+      title={name}
       okButtonProps={{
         onClick: () => {
           handleSubmitNewEntryForm()

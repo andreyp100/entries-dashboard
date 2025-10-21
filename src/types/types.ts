@@ -2,6 +2,12 @@ export type TFetchStatus = "idle" | "loading" | "success" | "error";
 
 export type TApiMethod<T = undefined> = (data?: T | any) => Promise<void>
 
+export interface IFetchStore {
+  getEntries: TApiMethod,
+  addEntry: TApiMethod<IEntry>,
+  removeEntry: TApiMethod<number>
+}
+
 export interface IApiRequestConfig<T = any> {
   method: "get" | "post" | "delete",
   endpoint: string,
@@ -31,14 +37,15 @@ export interface IEntryStore {
 export type TNewEntry  = Omit<IEntry, "id">
 
 export interface IModalProps {
+  name: string,
   isOpen: boolean,
-  setOpenState: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenState: (value: boolean) => void
 }
 
-export interface IFetchStore {
-  getEntries: TApiMethod,
-  addEntry: TApiMethod<IEntry>,
-  removeEntry: TApiMethod<number>
+
+export interface IModalStore {
+  newEntry: IModalProps,
+  newCategory: IModalProps
 }
 
 

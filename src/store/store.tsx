@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig } from "../types/types";
+import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore } from "../types/types";
 import axios from "axios";
 
 export const useEntryStore = create<IEntryStore>((set, get) => {
@@ -28,8 +28,6 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
 
     try{      
       const response = await axios[method](`${apiAddress}${endpoint}`, data, )
-      console.log("response.data: ", response.data ), 
-      // useEntryStore.getState().updateEntries(response.data)
       entryStoreMethod(response.data)
       updateAfterRequest && get().getEntries()
       useEntryStore.getState().setStatus("success")
@@ -61,4 +59,23 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         updateAfterRequest: true
       })
     }
+})
+
+export const useModalStore = create<IModalStore>((set, get) => {
+
+  const updateModalState = (value: boolean, modalName: keyof IModalStore) => {
+     return set((state) => ({[`${modalName}`]: {...state[modalName], isOpen: value}}))
+  }
+  
+  return {
+    newEntry: {
+      name: "newEntry",
+      isOpen: false,
+      setOpenState: (value: boolean) => updateModalState(value, "newEntry")
+    },
+    newCategory: {
+      name: "newCategory",
+      isOpen: false,
+      setOpenState: (value: boolean) => updateModalState(value, "newCategory")
+    }}
 })

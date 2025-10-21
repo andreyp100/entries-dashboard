@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import type { TableProps } from 'antd';
-import { Form, Input, InputNumber, Table } from 'antd';
-import type { IEntry } from '../../types/types';
-import { useEntryStore } from '../../store/store';
+import { Button, Form, Input, InputNumber, Table } from 'antd';
+import type { IEntry, IModalProps } from '../../types/types';
+import { useEntryStore, useModalStore } from '../../store/store';
+import {PlusOutlined} from '@ant-design/icons'
 
 
 const originData = Array.from({ length: 100 }).map<IEntry>((_, i) => ({
@@ -64,6 +65,7 @@ const MainTable: React.FC = () => {
   const isEditing = (record: IEntry) => record.id.toString() === editingKey;
 
   const entriesData = useEntryStore()
+  const modalStore = useModalStore()
 
   React.useEffect(() => {
     setData(entriesData.entries)
@@ -74,7 +76,7 @@ const MainTable: React.FC = () => {
     setEditingKey('');
   };
 
-  const columns = [
+  const columnsData = [
     {
       title: 'date',
       dataIndex: 'date',
@@ -94,14 +96,27 @@ const MainTable: React.FC = () => {
       editable: true,
     },
     {
-      title: 'category',
+      title: (<span className="flexTableHeader">
+        category
+        <Button 
+          style={{
+            marginRight: 10
+          }}
+          size='small'
+          variant='solid'
+          color='cyan'
+          icon={<PlusOutlined />}
+          onClick={() => modalStore.newCategory.setOpenState(true)}
+          />
+      </span>)
+      ,
       dataIndex: 'category',
       width: '40%',
       editable: true,
     },
   ];
 
-  const mergedColumns: TableProps<IEntry>['columns'] = columns.map((col, i) => {
+  const columns: TableProps<IEntry>['columns'] = columnsData.map((col, i) => {
     if (!col.editable) {
       return col;
     }
@@ -112,7 +127,7 @@ const MainTable: React.FC = () => {
         record,
         inputType: col.dataIndex === 'age' ? 'number' : 'text',
         dataIndex: col.dataIndex,
-        title: col.title,
+        title: col.title as any,
         editing: isEditing(record),
       }),
     };
@@ -126,7 +141,7 @@ const MainTable: React.FC = () => {
         }}
         bordered
         dataSource={data}
-        columns={mergedColumns}
+        columns={columns}
         rowClassName="editable-row"
         pagination={{ onChange: cancel }}
         size="small"

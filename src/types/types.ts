@@ -6,7 +6,8 @@ export interface IApiRequestConfig<T = any> {
   method: "get" | "post" | "delete",
   endpoint: string,
   data?: T,
-  entryStoreMethod: (data:IEntry | IEntry[] | number | any) => void
+  entryStoreMethod: (data:IEntry | IEntry[] | number | any) => void,
+  updateAfterRequest?: boolean
 }
 
 export interface IEntry {

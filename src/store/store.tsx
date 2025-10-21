@@ -21,21 +21,21 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
   const apiRequest = async (requestConfig: IApiRequestConfig): Promise<void> => {
     
     const apiAddress = `${import.meta.env.VITE_DB_ADDRESS}:${import.meta.env.VITE_DB_PORT}`;
-    const {method, endpoint, data, entryStoreMethod} = requestConfig;
-
-    console.log({method, endpoint, data, entryStoreMethod});
+    const {method, endpoint, data, entryStoreMethod, updateAfterRequest} = requestConfig;
     
 
     useEntryStore.getState().setStatus("loading")
 
-    try{
-      console.log("data: ", data);
-      
+    try{      
       const response = await axios[method](`${apiAddress}${endpoint}`, data, )
-      useEntryStore.getState().updateEntries(response.data)
+      console.log("response.data: ", response.data ), 
+      // useEntryStore.getState().updateEntries(response.data)
       entryStoreMethod(response.data)
-      useEntryStore.getState().setStatus("success")    
+      updateAfterRequest && get().getEntries()
+      useEntryStore.getState().setStatus("success")
     } catch (err: any){
+      console.log("err: ", err);
+      
       useEntryStore.getState().setStatus("error")
     }
   }
@@ -50,13 +50,15 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         method: "post",
         endpoint: "/entry",
         data: entry,
-        entryStoreMethod: useEntryStore.getState().addEntry 
+        entryStoreMethod: useEntryStore.getState().addEntry,
+        updateAfterRequest: true 
       }),   
       removeEntry: (entryId: number) => apiRequest({
         method: "delete",
         endpoint: "/entry",
         data: entryId,
-        entryStoreMethod: useEntryStore.getState().removeEntry
+        entryStoreMethod: useEntryStore.getState().removeEntry,
+        updateAfterRequest: true
       })
     }
 })

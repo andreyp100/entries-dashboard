@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card, DatePicker, Form, Input, Modal, Select } from 'antd'
+import { DatePicker, Form, Input, Modal, Select } from 'antd'
 import type { IModalProps, IEntry, TNewEntry } from '../../types/types'
 import { useEntryStore, useFetchStore } from '../../store/store'
 import dayjs from 'dayjs'
@@ -25,7 +25,7 @@ export const NewEntryModal = ({isOpen, setOpenState}: IModalProps) => {
   }
 
   const handleSubmitNewEntryForm = () => {
-    fetchStore.addEntry({"Id": 100, "Name": "Test Entry", "Sum": 100})
+    fetchStore.addEntry(formState).then(() => setOpenState(false))
   }
 
   React.useEffect(() => {

@@ -54,7 +54,7 @@ const MainTable: React.FC = () => {
   const [data, setData] = useState<IEntry[]>([]);
   const [editingKey, setEditingKey] = useState('');
 
-  const isEditing = (record: IEntry) => record.id.toString() === editingKey;
+  // const isEditing = (record: IEntry) => record.id.toString() === editingKey;
 
   const entriesData = useEntryStore()
   const modalStore = useModalStore()
@@ -102,7 +102,7 @@ const MainTable: React.FC = () => {
           />
       </span>)
       ,
-      dataIndex: 'category',
+      dataIndex: 'categoryName',
       width: '40%',
       editable: true,
     },
@@ -120,7 +120,7 @@ const MainTable: React.FC = () => {
         inputType: col.dataIndex === 'age' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title as any,
-        editing: isEditing(record),
+        // editing: isEditing(record),
       }),
     };
   });

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore } from "../types/types";
+import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory } from "../types/types";
 import axios from "axios";
 
 export const useEntryStore = create<IEntryStore>((set, get) => {
@@ -11,6 +11,7 @@ export const useEntryStore = create<IEntryStore>((set, get) => {
     removeEntry: (entryId: number) => set((state) => ({entries: [...state.entries.filter(e => e.id != entryId)]})),
     updateEntries: (entries: IEntry[]) => set(() => ({entries}) ),
     categories: [],
+    addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category]})),
     updateCategories: (categories: IEntry["category"][]) => set(() => ({categories}))
   }
 })
@@ -39,7 +40,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
   return {
       getEntries: () => apiRequest({
         method: "get",
-        endpoint: "/entry",
+        endpoint: "/entries",
         entryStoreMethod: useEntryStore.getState().updateEntries
       }),
       addEntry: (entry: IEntry) => apiRequest({
@@ -61,11 +62,11 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         endpoint: "/categories/list",
         entryStoreMethod: useEntryStore.getState().updateCategories
       }),
-      addCategory: (categoryName: string) => apiRequest({
+      addCategory: (category: ICategory) => apiRequest({
         method: "post",
         endpoint: "/category/add",
-        data: {name: categoryName},
-        entryStoreMethod: useEntryStore.getState().updateCategories
+        data: category,
+        entryStoreMethod: useEntryStore.getState().addCategory
       })
     }
 })

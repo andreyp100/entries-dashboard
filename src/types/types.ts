@@ -18,12 +18,17 @@ export interface IApiRequestConfig<T = any> {
   updateAfterRequest?: boolean
 }
 
+export interface ICategory {
+  name: string,
+  isPrimary: boolean
+}
+
 export interface IEntry {
   id: number,
   date: number,
   name: string,
   sum: number | '',
-  category: {name: string, id: number}
+  category: ICategory
 }
 
 export interface IEntryStore {
@@ -31,13 +36,14 @@ export interface IEntryStore {
   updateEntries: (entries: IEntry[]) => void;
   addEntry: (entry: IEntry) => void,
   removeEntry: (entryId: number) => void,
-  categories: IEntry["category"][];
-  updateCategories: (categories: IEntry["category"][]) => void,
+  categories: ICategory[];
+  addCategory: (category: ICategory) => void,
+  updateCategories: (categories: ICategory[]) => void,
   status: TFetchStatus
   setStatus: (status: TFetchStatus) => void;
 }
 
-export type TNewEntry  = Omit<IEntry, "id" | "category"> & {category: string}
+export type TNewEntry  = Omit<IEntry, "id" | "category"> & {categoryName: string}
 
 export interface IModalProps {
   name: string,
@@ -49,6 +55,11 @@ export interface IModalProps {
 export interface IModalStore {
   newEntry: IModalProps,
   newCategory: IModalProps
+}
+
+export interface ICategorySelectOptions {
+  label: string,
+  value: string
 }
 
 

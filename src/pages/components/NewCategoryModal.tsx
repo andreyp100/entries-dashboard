@@ -1,15 +1,16 @@
-import { Form, Input, Modal } from 'antd'
+import { Checkbox, Form, Input, Modal } from 'antd'
 import * as React from 'react'
 import type { IModalProps } from '../../types/types'
 import { useFetchStore } from '../../store/store'
 
 export const NewCategoryModal = ({isOpen, setOpenState}: IModalProps) => {
 
+  const [isPrimary, setIsPrimary] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>("")
   const {addCategory} = useFetchStore()
 
   const handleSubmitNewCategoryName = () => {
-    name && addCategory(name)
+    name && addCategory({name, isPrimary})
   }
 
   React.useEffect(() => {
@@ -42,6 +43,11 @@ export const NewCategoryModal = ({isOpen, setOpenState}: IModalProps) => {
                 }}
                 placeholder='name'
               />
+            </Form.Item>
+             <Form.Item>
+              <Checkbox onChange={() => setIsPrimary(!isPrimary)}>
+                is primary
+              </Checkbox>
             </Form.Item>
           
         </Form>

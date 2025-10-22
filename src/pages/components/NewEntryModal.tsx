@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { DatePicker, Form, Input, Modal, Select } from 'antd'
-import type { IModalProps, IEntry, TNewEntry } from '../../types/types'
+import type { IModalProps, IEntry, TNewEntry, ICategory, ICategorySelectOptions } from '../../types/types'
 import { useEntryStore, useFetchStore } from '../../store/store'
 import dayjs from 'dayjs'
 
@@ -13,9 +13,10 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
     date: Date.now(),
     name: "",
     sum: "",
-    category: ""
+    categoryName: ""
   }
   const [formState, setFormState] = React.useState<TNewEntry>(initialFormState)
+  const [categorySelectOptions, setCategorySelectOptions] = React.useState<ICategorySelectOptions[]>([])
 
   const handleChangeFormState = (field: keyof TNewEntry, value: string | number) => {
     setFormState({
@@ -27,6 +28,16 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
   const handleSubmitNewEntryForm = () => {
     fetchStore.addEntry(formState).then(() => entryStore.status === "success" && setOpenState(false))
   }
+
+  React.useEffect(() => {
+    setCategorySelectOptions(() => {
+      return entryStore.categories.map(esc => ({
+        label: esc.name,
+        value: esc.name
+      })) 
+    })
+  }, [entryStore.categories])
+
 
   React.useEffect(() => {
     setFormState(initialFormState)
@@ -81,13 +92,13 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
               />
           </Form.Item>
           <Form.Item label="category">
-            <Select>
-              {
-                entryStore.categories.map((c: IEntry["category"], i: number) => (
-                  <Select.Option key={i}>{c.name}</Select.Option>
-                ))
-              }
-            </Select>
+            <Select 
+              options={categorySelectOptions}
+              onChange={(e) =>{ 
+                
+                console.log("e: ", e)
+                handleChangeFormState("categoryName", e)}}
+              />
           </Form.Item>
         </Form>
 

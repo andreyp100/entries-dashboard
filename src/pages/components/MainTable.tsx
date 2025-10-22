@@ -60,7 +60,9 @@ const MainTable: React.FC = () => {
   const modalStore = useModalStore()
 
   React.useEffect(() => {
-    setData(entriesData.entries)
+    setData(entriesData.entries.map(e => {
+      return {...e, date: new Date(e.date).toLocaleString("ru-RU")} as any
+    }))
   }, [entriesData.entries])
 
 

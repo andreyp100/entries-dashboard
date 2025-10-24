@@ -6,29 +6,32 @@ import { setFormValue } from './utilityFunctions'
 
 export const NewCategoryModal = () => {
 
-  const initialFormState: ICategory = {
+  
+  const {addCategory} = useFetchStore()
+  const {status} = useEntryStore()
+  const {newCategory: {isOpen, toggleModal, type, data}} = useModalStore()
+
+  const initialFormState: ICategory & {categoryName?: string} = {
     name: "",
     limit: 0,
     isPrimary: false
   }
-
   const [formState, setFormState] = React.useState(initialFormState)
-  const {addCategory} = useFetchStore()
-  const {status} = useEntryStore()
-  const {newCategory: {isOpen, toggleModal, type}} = useModalStore()
-
+  
   const handleSubmitNewCategoryName = () => {
-    console.log("formState: ", formState);
-    
-    addCategory(formState).then(() => status === "success" && toggleModal({value: false}))
+    addCategory(!data ? formState : {...formState, categoryName: data.categoryName}).then(() => status === "success" && toggleModal({value: false}))
   }
 
   const handleChangeFormState = (field: keyof ICategory, value: string | boolean) => {
     setFormValue(formState, field, value, setFormState)
   }
 
-  React.useEffect(() => {
-    setFormState(initialFormState)
+  React.useEffect(() => {    
+    setFormState(isOpen ? {
+      name: data?.name || initialFormState.name,
+      limit: data?.limit || initialFormState.limit,
+      isPrimary: data?.isPrimary || initialFormState.isPrimary
+  } : initialFormState)
   }, [isOpen])
 
   return (
@@ -68,7 +71,9 @@ export const NewCategoryModal = () => {
               />
             </Form.Item>
              <Form.Item>
-              <Checkbox onChange={() =>{
+              <Checkbox 
+              value={formState.isPrimary}
+              onChange={() =>{
                 handleChangeFormState("isPrimary", !formState.isPrimary)}}>
                 is primary
               </Checkbox>

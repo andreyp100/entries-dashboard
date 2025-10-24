@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { TCategoryRecord } from '../../types/types'
+import type { ICategory, TCategoryRecord } from '../../types/types'
 import { Button, Table, type TableProps } from 'antd'
 import { useModalStore } from '../../store/store'
 
@@ -35,10 +35,10 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
       title: !isSettingsTable ? "current" : "",
       dataIndex: !isSettingsTable ? "current" : "edit",
       width: "20%",
-      render: (data:any) => isSettingsTable ? <Button 
+      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <Button 
         onClick={() => {
-          toggleModal({value: true, type: "edit"})
-          console.log("data: ", data)}} 
+          toggleModal({value: true, type: "edit", data: record})
+          console.log("record: ", record)}} 
         type='link' size='small'>edit</Button> : data
     }
   ]

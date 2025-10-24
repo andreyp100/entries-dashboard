@@ -48,13 +48,14 @@ export interface IEntryStore {
 
 export type TNewEntry  = Omit<IEntry, "id" | "category"> & {categoryName: string}
 
-export type TModalDataProps = {value: boolean, data?: any, type?: string}
+export type TModalDataProps = {value: boolean, data?: any, type?: string, }
 
 export interface IModalProps {
   name: string,
   isOpen: boolean,
   type?: string
   toggleModal: (modalData: TModalDataProps) => void,
+  data?: TModalDataProps["data"]
 }
 
 

@@ -67,6 +67,12 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         endpoint: "/category/add",
         data: category,
         entryStoreMethod: useEntryStore.getState().addCategory
+      }),
+      editCategory: (name: string, category: ICategory) => apiRequest({
+        method: "post",
+        endpoint: "/category/edit",
+        data: {name, category},
+        entryStoreMethod: useEntryStore.getState().updateCategories
       })
     }
 })
@@ -87,6 +93,6 @@ export const useModalStore = create<IModalStore>((set, get) => {
     newCategory: {
       name: "newCategory",
       isOpen: false,
-      toggleModal: ({value, data, type} : {value: boolean, data?: any, type?: string}) => updateModalState({value, modalName: "newCategory", data, type})
+      toggleModal: ({value, data, type} : TModalDataProps) => updateModalState({value, modalName: "newCategory", data, type})
     }}
 })

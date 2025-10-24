@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { DatePicker, Form, Input, Modal, Select } from 'antd'
-import type { IModalProps, IEntry, TNewEntry, ICategory, ICategorySelectOptions } from '../../types/types'
-import { useEntryStore, useFetchStore } from '../../store/store'
+import type { TNewEntry, ICategorySelectOptions } from '../../types/types'
+import { useEntryStore, useFetchStore, useModalStore } from '../../store/store'
 import dayjs from 'dayjs'
+import { setFormValue } from './utilityFunctions'
 
-export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
+export const NewEntryModal = () => {
 
   const entryStore = useEntryStore()
   const fetchStore = useFetchStore()
+  const {newEntry: {name, isOpen, toggleModal}} = useModalStore();
 
   const initialFormState: TNewEntry = {
     date: Date.now(),
@@ -18,15 +20,12 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
   const [formState, setFormState] = React.useState<TNewEntry>(initialFormState)
   const [categorySelectOptions, setCategorySelectOptions] = React.useState<ICategorySelectOptions[]>([])
 
-  const handleChangeFormState = (field: keyof TNewEntry, value: string | number) => {
-    setFormState({
-      ...formState,
-      [field]: field !== "sum" ? value : parseFloat(value as string)
-    })
+  const handleChangeFormState = (field: keyof TNewEntry, value: string | number) => {    
+    setFormValue(formState, field, value, setFormState)
   }
 
   const handleSubmitNewEntryForm = () => {
-    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && setOpenState(false))
+    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && toggleModal({value: false}))
   }
 
   React.useEffect(() => {
@@ -47,24 +46,16 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
   return (
     <Modal
       open={isOpen}
-      onCancel={() => {
-        setOpenState(false)
-      }}
+      onCancel={() => toggleModal({value: false})}
       title={name}
       okButtonProps={{
-        onClick: () => {
-          handleSubmitNewEntryForm()
-          console.log("formState: ", formState)
-        }
+        onClick: () => handleSubmitNewEntryForm()
       }}
     >
         <Form
           labelCol={{span: 4}}
           wrapperCol={{span: 16}}
-          style={{
-            maxWidth: 600,
-            marginTop: 30,
-          }}
+          style={{ maxWidth: 600, marginTop: 30}}
         >
           <Form.Item label="date">
             <DatePicker 
@@ -95,8 +86,6 @@ export const NewEntryModal = ({name, isOpen, setOpenState}: IModalProps) => {
             <Select 
               options={categorySelectOptions}
               onChange={(e) =>{ 
-                
-                console.log("e: ", e)
                 handleChangeFormState("categoryName", e)}}
               />
           </Form.Item>

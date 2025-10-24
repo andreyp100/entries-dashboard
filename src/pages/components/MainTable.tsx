@@ -46,7 +46,7 @@ const MainTable: React.FC = () => {
           variant='solid'
           color='cyan'
           icon={<PlusOutlined />}
-          onClick={() => modalStore.newCategory.setOpenState(true)}
+          onClick={() => modalStore.newCategory.toggleModal({value: true})}
           />
       </span>)
       ,

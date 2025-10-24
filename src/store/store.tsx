@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory } from "../types/types";
+import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory, type TModalDataProps } from "../types/types";
 import axios from "axios";
 
 export const useEntryStore = create<IEntryStore>((set, get) => {
@@ -73,19 +73,20 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
 
 export const useModalStore = create<IModalStore>((set, get) => {
 
-  const updateModalState = (value: boolean, modalName: keyof IModalStore) => {
-     return set((state) => ({[`${modalName}`]: {...state[modalName], isOpen: value}}))
+  const updateModalState = (modalData: TModalDataProps & {modalName: keyof IModalStore}) => {
+    const {value, modalName, data, type} = modalData
+     return set((state) => ({[`${modalName}`]: {...state[modalName] , isOpen: value, type, data}}))
   }
   
   return {
     newEntry: {
       name: "newEntry",
       isOpen: false,
-      setOpenState: (value: boolean) => updateModalState(value, "newEntry")
+      toggleModal: ({value}: {value: boolean}) => updateModalState({value, modalName: "newEntry"})
     },
     newCategory: {
       name: "newCategory",
       isOpen: false,
-      setOpenState: (value: boolean) => updateModalState(value, "newCategory")
+      toggleModal: ({value, data, type} : {value: boolean, data?: any, type?: string}) => updateModalState({value, modalName: "newCategory", data, type})
     }}
 })

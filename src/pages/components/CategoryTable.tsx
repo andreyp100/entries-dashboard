@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import type { TCategoryRecord } from '../../types/types'
-import { Table, type TableProps } from 'antd'
+import { Button, Table, type TableProps } from 'antd'
+import { useModalStore } from '../../store/store'
 
 type TCategoriesTableProps = {
   categoriesData: TCategoryRecord[],
@@ -10,6 +11,8 @@ type TCategoriesTableProps = {
 const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps) => {
 
   const [data, setData] = useState<TCategoryRecord[]>([])
+
+  const {newCategory: {toggleModal}} = useModalStore()
 
   React.useEffect(() => {
     if (categoriesData.length){
@@ -21,17 +24,22 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
     {
       title: "name",
       dataIndex: "name",
-      width: "30%",
+      width: "60%",
     },
     {
       title: "limit",
       dataIndex: "limit",
-      width: "30%",
+      width: "20%",
     },
     {
-      title: "currentSpent",
-      dataIndex: "currentSpent",
-      width: "30%",
+      title: !isSettingsTable ? "current" : "",
+      dataIndex: !isSettingsTable ? "current" : "edit",
+      width: "20%",
+      render: (data:any) => isSettingsTable ? <Button 
+        onClick={() => {
+          toggleModal({value: true, type: "edit"})
+          console.log("data: ", data)}} 
+        type='link' size='small'>edit</Button> : data
     }
   ]
 
@@ -54,10 +62,10 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
     <Table 
       bordered
       dataSource={data}
-      columns={!isSettingsTable ? columnsData : columnsData.slice(0,2)}
+      columns={columnsData}
       size='small'
       style={{
-        maxWidth: "40%"
+        maxWidth: "30%"
       }}
       pagination={false}
       

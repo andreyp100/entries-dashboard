@@ -2,9 +2,9 @@ import * as React from 'react'
 import {Button, Flex} from 'antd'
 import MainTable from './components/MainTable'
 import {PlusOutlined} from '@ant-design/icons'
-import { NewEntryModal } from './components/NewEntryModal'
+import { NewEntryModal } from './Modals/NewEntryModal'
 import { useEntryStore, useFetchStore, useModalStore } from '../store/store'
-import { NewCategoryModal } from './components/NewCategoryModal'
+import { NewCategoryModal } from './Modals/NewCategoryModal'
 import CategoryTable from './components/CategoryTable'
 import type { TCategoryRecord } from '../types/types'
 
@@ -38,19 +38,11 @@ export const MainPage = () => {
           variant='solid'
           color='cyan'
           icon={<PlusOutlined />}
-          onClick={() => modalStore.newEntry.setOpenState(true)}
+          onClick={() => modalStore.newEntry.toggleModal({value: true})}
           />
         <MainTable />
-        <NewEntryModal
-          name="newEntry"
-          isOpen={modalStore.newEntry.isOpen}
-          setOpenState={modalStore.newEntry.setOpenState}
-        />
-        <NewCategoryModal 
-          name="newCategory"
-          isOpen={modalStore.newCategory.isOpen}
-          setOpenState={modalStore.newCategory.setOpenState}
-        />
+        <NewEntryModal />
+        <NewCategoryModal />
       </Flex>
 
     </Flex>

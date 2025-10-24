@@ -20,8 +20,11 @@ export interface IApiRequestConfig<T = any> {
 
 export interface ICategory {
   name: string,
-  isPrimary: boolean
+  isPrimary: boolean,
+  limit: number
 }
+
+export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number}
 
 export interface IEntry {
   id: number,

@@ -12,7 +12,7 @@ export const useEntryStore = create<IEntryStore>((set, get) => {
     updateEntries: (entries: IEntry[]) => set(() => ({entries}) ),
     categories: [],
     addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category]})),
-    updateCategories: (categories: IEntry["category"][]) => set(() => ({categories}))
+    updateCategories: (categories: IEntry["category"][]) => set(() => ({categories: categories}))
   }
 })
 

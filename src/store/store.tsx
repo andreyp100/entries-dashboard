@@ -1,20 +1,28 @@
 import { create } from "zustand";
-import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory, type TModalDataProps } from "../types/types";
+import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory, type TModalDataProps, type ICategoryStore, type TFetchStatus } from "../types/types";
 import axios from "axios";
 
 export const useEntryStore = create<IEntryStore>((set, get) => {
   return {
     status: "idle",
-    setStatus: (updatedStatus: IEntryStore["status"]) => set(() => ({status: updatedStatus})),
+    setStatus: (updatedStatus: TFetchStatus) => set(() => ({status: updatedStatus})),
     entries: [],
     addEntry: (entry:IEntry) => set((state) => ({entries: [...state.entries,entry]})),
     removeEntry: (entryId: number) => set((state) => ({entries: [...state.entries.filter(e => e.id != entryId)]})),
     updateEntries: (entries: IEntry[]) => set(() => ({entries}) ),
-    categories: [],
-    addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category]})),
-    updateCategories: (categories: IEntry["category"][]) => set(() => ({categories: categories}))
   }
 })
+
+export const useCategoryStore = create<ICategoryStore>((set, get) => {
+  return {
+    status: "idle",
+    setStatus: (updatedStatus: TFetchStatus) => set(() => ({status: updatedStatus})),
+    categories: [],
+    addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category]})),
+    updateCategories: (categories: ICategory[]) => set(() => ({categories: categories}))
+  }
+})
+
 
 
 
@@ -23,17 +31,28 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
   const apiRequest = async (requestConfig: IApiRequestConfig): Promise<void> => {
     
     const apiAddress = `${import.meta.env.VITE_DB_ADDRESS}:${import.meta.env.VITE_DB_PORT}`;
-    const {method, endpoint, data, entryStoreMethod, updateAfterRequest} = requestConfig;    
+    const {method, endpoint, data, storeMethod, updateAfterRequest, store} = requestConfig;    
 
-    useEntryStore.getState().setStatus("loading")
+    const stores = {
+      entries: useEntryStore,
+      categories: useCategoryStore
+    }
+
+    stores[store].getState().setStatus("loading")
+
 
     try{      
-      const response = await axios[method](`${apiAddress}${endpoint}`, data, )
-      entryStoreMethod(response.data)
-      updateAfterRequest && get().getEntries()
-      useEntryStore.getState().setStatus("success")
-    } catch (err: any){      
-      useEntryStore.getState().setStatus("error")
+      const response = await axios[method](`${apiAddress}${endpoint}`, data)
+      if (response.data){
+         storeMethod(response.data)
+         updateAfterRequest && get().getEntries()
+         console.log(`settings status of ${store} after ${method.toUpperCase()} request to ${apiAddress}${endpoint}`);
+         stores[store].getState().setStatus("success")
+      }
+    } catch (err: any){   
+      console.log("axios err catch: ", err);
+         
+      stores[store].getState().setStatus("error")
     }
   }
 
@@ -41,38 +60,47 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
       getEntries: () => apiRequest({
         method: "get",
         endpoint: "/entries",
-        entryStoreMethod: useEntryStore.getState().updateEntries
+        storeMethod: useEntryStore.getState().updateEntries,
+        store: "entries"
       }),
       addEntry: (entry: IEntry) => apiRequest({
         method: "post",
         endpoint: "/entry",
         data: entry,
-        entryStoreMethod: useEntryStore.getState().addEntry,
-        updateAfterRequest: true 
+        storeMethod: useEntryStore.getState().addEntry,
+        updateAfterRequest: true,
+        store: "entries" 
       }),   
       removeEntry: (entryId: number) => apiRequest({
         method: "delete",
         endpoint: "/entry",
         data: entryId,
-        entryStoreMethod: useEntryStore.getState().removeEntry,
-        updateAfterRequest: true
+        storeMethod: useEntryStore.getState().removeEntry,
+        updateAfterRequest: true,
+        store: "entries"
       }),
       getCategories: () => apiRequest({
         method: "get",
         endpoint: "/categories/list",
-        entryStoreMethod: useEntryStore.getState().updateCategories
+        storeMethod: useCategoryStore.getState().updateCategories,
+        store: "categories"
       }),
       addCategory: (category: ICategory) => apiRequest({
         method: "post",
         endpoint: "/category/add",
         data: category,
-        entryStoreMethod: useEntryStore.getState().addCategory
+        storeMethod: 
+          // useCategoryStore.getState().addCategory
+          () => {console.log("test store method")}
+          ,
+        store: "categories"
       }),
-      editCategory: (name: string, category: ICategory) => apiRequest({
+      editCategory: (category: ICategory) => apiRequest({
         method: "post",
         endpoint: "/category/edit",
-        data: {name, category},
-        entryStoreMethod: useEntryStore.getState().updateCategories
+        data: category,
+        storeMethod: useCategoryStore.getState().updateCategories,
+        store: "categories"
       })
     }
 })

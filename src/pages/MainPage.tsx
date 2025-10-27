@@ -3,7 +3,7 @@ import {Button, Flex} from 'antd'
 import MainTable from './components/MainTable'
 import {PlusOutlined} from '@ant-design/icons'
 import { NewEntryModal } from './Modals/NewEntryModal'
-import { useEntryStore, useFetchStore, useModalStore } from '../store/store'
+import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../store/store'
 import { NewCategoryModal } from './Modals/NewCategoryModal'
 import CategoryTable from './components/CategoryTable'
 import type { TCategoryRecord } from '../types/types'
@@ -12,6 +12,7 @@ export const MainPage = () => {
 
   const entryStore = useEntryStore()
   const modalStore = useModalStore()
+  const categoryStore = useCategoryStore()
   const {getEntries, getCategories} = useFetchStore()
   const [primaryCategories, setPrimaryCategories] = React.useState<TCategoryRecord[]>([])
 
@@ -23,8 +24,13 @@ export const MainPage = () => {
   }, [])
 
   React.useEffect(() => {
-    setPrimaryCategories(entryStore.categories)
-  }, [entryStore.categories])
+    setPrimaryCategories(categoryStore.categories)
+  }, [categoryStore.categories])
+
+  React.useEffect(() => {
+    console.log("categoryStore.status: ", categoryStore.status);
+    
+  }, [categoryStore.status])
 
 
   return (

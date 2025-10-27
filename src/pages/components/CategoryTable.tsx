@@ -37,8 +37,8 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
       width: "20%",
       render: (data:any, record: TCategoryRecord) => isSettingsTable ? <Button 
         onClick={() => {
-          toggleModal({value: true, type: "edit", data: record})
-          console.log("record: ", record)}} 
+          toggleModal({value: true, type: "editCategory", data: {...record, originalName: record.name}})
+        }} 
         type='link' size='small'>edit</Button> : data
     }
   ]

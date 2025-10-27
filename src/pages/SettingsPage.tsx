@@ -1,13 +1,13 @@
 import { Flex } from 'antd'
 import React from 'react'
 import CategoryTable from './components/CategoryTable'
-import { useEntryStore } from '../store/store'
+import { useCategoryStore } from '../store/store'
 import { type ICategory } from '../types/types'
 
 export const SettingsPage = () => {
 
   const [categoriesData, setCategoriesData] = React.useState<ICategory[]>([])
-  const {categories} = useEntryStore()
+  const {categories} = useCategoryStore()
 
   React.useEffect(() => {
     setCategoriesData(categories)

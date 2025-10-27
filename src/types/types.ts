@@ -12,16 +12,18 @@ export interface IFetchStore {
 
 export interface IApiRequestConfig<T = any> {
   method: "get" | "post" | "delete",
+  store: "entries" | "categories",
   endpoint: string,
   data?: T,
-  entryStoreMethod: (data:IEntry | IEntry[] | number | any) => void,
+  storeMethod: (data:IEntry | IEntry[] | number | any) => void,
   updateAfterRequest?: boolean
 }
 
 export interface ICategory {
   name: string,
   isPrimary: boolean,
-  limit: number
+  limit: number,
+  originalName?: string
 }
 
 export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number}
@@ -39,6 +41,10 @@ export interface IEntryStore {
   updateEntries: (entries: IEntry[]) => void;
   addEntry: (entry: IEntry) => void,
   removeEntry: (entryId: number) => void,
+  status: TFetchStatus
+  setStatus: (status: TFetchStatus) => void;
+}
+export interface ICategoryStore {
   categories: ICategory[];
   addCategory: (category: ICategory) => void,
   updateCategories: (categories: ICategory[]) => void,

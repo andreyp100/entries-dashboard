@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { DatePicker, Form, Input, Modal, Select } from 'antd'
 import type { TNewEntry, ICategorySelectOptions } from '../../types/types'
-import { useEntryStore, useFetchStore, useModalStore } from '../../store/store'
+import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../../store/store'
 import dayjs from 'dayjs'
 import { setFormValue } from './utilityFunctions'
 
@@ -9,6 +9,7 @@ export const NewEntryModal = () => {
 
   const entryStore = useEntryStore()
   const fetchStore = useFetchStore()
+  const {categories} = useCategoryStore()
   const {newEntry: {name, isOpen, toggleModal}} = useModalStore();
 
   const initialFormState: TNewEntry = {
@@ -28,18 +29,25 @@ export const NewEntryModal = () => {
     fetchStore.addEntry(formState).then(() => entryStore.status === "success" && toggleModal({value: false}))
   }
 
-  React.useEffect(() => {
-    setCategorySelectOptions(() => {
-      return entryStore.categories.map(esc => ({
-        label: esc.name,
-        value: esc.name
-      })) 
-    })
-  }, [entryStore.categories])
+  // React.useEffect(() => {
+  //   setCategorySelectOptions(() => {
+  //     return categories.map(esc => ({
+  //       label: esc.name,
+  //       value: esc.name
+  //     })) 
+  //   })
+  // }, [])
 
 
   React.useEffect(() => {
     setFormState(initialFormState)
+    setCategorySelectOptions(() => {
+      return categories.map((esc, i) => ({
+        label: esc.name,
+        value: `${esc.name}`,
+        key: i
+      })) 
+    })
   }, [isOpen])
 
 

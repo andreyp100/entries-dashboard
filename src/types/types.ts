@@ -1,3 +1,6 @@
+import type { ButtonColorType } from "antd/es/button";
+import type { ReactNode } from "react";
+
 export type TFetchStatus = "idle" | "loading" | "success" | "error";
 
 export type TApiMethod<T = undefined> = (data?: T | any) => Promise<void>
@@ -55,25 +58,37 @@ export interface ICategoryStore {
 
 export type TNewEntry  = Omit<IEntry, "id" | "category"> & {categoryName: string}
 
-export type TModalDataProps = {value: boolean, data?: any, type?: string, }
+export interface IModalData {
+  value: boolean,
+  data?: any
+}
 
 export interface IModalProps {
   name: string,
   isOpen: boolean,
   type?: string
-  toggleModal: (modalData: TModalDataProps) => void,
-  data?: TModalDataProps["data"]
+  toggleModal: (toggleValue: boolean, data?: any) => void,
+  data?: any
 }
 
 
 export interface IModalStore {
   newEntry: IModalProps,
-  newCategory: IModalProps
+  newCategory: IModalProps,
+  deleteConfirmation: IModalProps
 }
 
 export interface ICategorySelectOptions {
   label: string,
   value: string
+}
+
+export interface IButtonProps {
+  onClick: (args: any) => void,
+  title: string,
+  color?: ButtonColorType,
+  isTiny?: boolean
+  icon?: ReactNode
 }
 
 

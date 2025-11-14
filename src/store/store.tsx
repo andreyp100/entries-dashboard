@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory, type TModalDataProps, type ICategoryStore, type TFetchStatus } from "../types/types";
+import { type IFetchStore, type IEntry, type IEntryStore, type IApiRequestConfig, type IModalStore, type ICategory, type ICategoryStore, type TFetchStatus, type IModalData } from "../types/types";
 import axios from "axios";
 
 export const useEntryStore = create<IEntryStore>((set, get) => {
@@ -57,7 +57,6 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
       if (response.data){
          storeMethod(response.data)
          updateAfterRequest && get().getEntries()
-         console.log(`settings status of ${store} after ${method.toUpperCase()} request to ${apiAddress}${endpoint}`);
          stores[store].getState().setStatus("success")
       }
     } catch (err: any){   
@@ -117,20 +116,31 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
 
 export const useModalStore = create<IModalStore>((set, get) => {
 
-  const updateModalState = (modalData: TModalDataProps & {modalName: keyof IModalStore}) => {
-    const {value, modalName, data, type} = modalData
-     return set((state) => ({[`${modalName}`]: {...state[modalName] , isOpen: value, type, data}}))
+
+  const updateModalState = (toggleValue: boolean, modalName: keyof IModalStore, data?: any) => {
+     return set((state) => ({
+      [`${modalName}`]: {...state[modalName],
+         isOpen: toggleValue,
+         data: data
+        }}))
   }
+
   
   return {
     newEntry: {
       name: "newEntry",
       isOpen: false,
-      toggleModal: ({value}: {value: boolean}) => updateModalState({value, modalName: "newEntry"})
+      toggleModal: (toggleValue: boolean, data: any) => updateModalState(toggleValue, "newEntry", data)
     },
     newCategory: {
       name: "newCategory",
       isOpen: false,
-      toggleModal: ({value, data, type} : TModalDataProps) => updateModalState({value, modalName: "newCategory", data, type})
-    }}
+      toggleModal: (toggleValue: boolean, data: any) => updateModalState(toggleValue, "newCategory", data)
+    },
+    deleteConfirmation: {
+      name: "deleteConfirmation",
+      isOpen: false,
+      toggleModal: (toggleValue: boolean, data: any) => updateModalState(toggleValue, "deleteConfirmation", data)
+    }
+  }
 })

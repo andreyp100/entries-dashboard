@@ -1,6 +1,6 @@
 import { Checkbox, Form, Input, Modal } from 'antd'
 import * as React from 'react'
-import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../../store/store'
+import { useCategoryStore, useFetchStore, useModalStore } from '../../store/store'
 import type { ICategory, IFetchStore } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
 
@@ -19,16 +19,13 @@ export const NewCategoryModal = () => {
   const [formState, setFormState] = React.useState(initialFormState)
   
   const updateCategory = () => {
-    console.log("type: ", type);
-    
-    fetchStore[`${type as keyof IFetchStore}`](formState)
-
+    fetchStore[`${data?.type as keyof IFetchStore}`](formState)
 
     .then((res) => {
       if (status === "success"){
         console.log("status (", type, ") is: ", status);
         console.log("res: ", res)
-        toggleModal({value: false})
+        toggleModal(false)
       } else {
         console.log(`status not success (${status})`)}
       }
@@ -36,9 +33,10 @@ export const NewCategoryModal = () => {
   }
 
   React.useEffect(() => {
-    console.log("isOpen: ", isOpen);
+    console.log("data: ", data);
     
-  }, [isOpen])
+  }, [data])
+
 
   const handleChangeFormState = (field: keyof ICategory, value: string | boolean) => {
     setFormValue(formState, field, value, setFormState)
@@ -51,13 +49,13 @@ export const NewCategoryModal = () => {
       isPrimary: data?.isPrimary || initialFormState.isPrimary,
       originalName: data?.originalName || undefined
   } : initialFormState)
-  }, [isOpen])
+  }, [isOpen, data?.data])
 
   return (
     <Modal
       open={isOpen}
-      onCancel={() => toggleModal({value: false})}
-      title={type === "editCategory" ? "edit category" : "new category"}
+      onCancel={() => toggleModal(false)}
+      title={data?.type === "editCategory" ? "edit category" : "new category"}
       okButtonProps={{
         onClick: () => {
           updateCategory()

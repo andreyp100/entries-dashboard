@@ -7,6 +7,7 @@ import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '.
 import { NewCategoryModal } from './Modals/NewCategoryModal'
 import CategoryTable from './components/CategoryTable'
 import type { TCategoryRecord } from '../types/types'
+import { SquareButton } from './components/Buttons/SquareButton'
 
 export const MainPage = () => {
 
@@ -32,15 +33,10 @@ export const MainPage = () => {
     <Flex vertical gap={50} justify='flex-start'>
       <CategoryTable categoriesData={primaryCategories}/>
       <Flex vertical gap={10}>
-        <Button 
-          style={{
-            maxWidth: "5vw",
-          }}
-          variant='solid'
-          color='cyan'
-          icon={<PlusOutlined />}
+        <SquareButton 
+          title={"add entry"}
           onClick={() => modalStore.newEntry.toggleModal({value: true})}
-          />
+        />
         <MainTable />
         <NewEntryModal />
         <NewCategoryModal />

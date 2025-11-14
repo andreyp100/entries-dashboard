@@ -4,6 +4,7 @@ import { Button, Table } from 'antd';
 import type { IEntry } from '../../types/types';
 import { useEntryStore, useModalStore } from '../../store/store';
 import {PlusOutlined} from '@ant-design/icons'
+import { SquareButton } from './Buttons/SquareButton';
 
 
 const MainTable: React.FC = () => {
@@ -38,16 +39,11 @@ const MainTable: React.FC = () => {
     {
       title: (<span className="flexTableHeader">
         category
-        <Button 
-          style={{
-            marginRight: 10
-          }}
-          size='small'
-          variant='solid'
-          color='cyan'
-          icon={<PlusOutlined />}
+        <SquareButton 
+          title='add category'
+          icon={<PlusOutlined/>}
           onClick={() => modalStore.newCategory.toggleModal({value: true, type: "addCategory"})}
-          />
+        />
       </span>)
       ,
       dataIndex: 'categoryName',

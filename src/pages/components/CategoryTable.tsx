@@ -3,6 +3,10 @@ import type { TCategoryRecord } from '../../types/types'
 import { Button, Table, type TableProps } from 'antd'
 import { useModalStore } from '../../store/store'
 import {PlusOutlined} from '@ant-design/icons'
+import { EditOutlined } from '@ant-design/icons'
+import { SquareButton } from './Buttons/SquareButton'
+import { DeleteOutlined } from '@ant-design/icons'
+
 
 type TCategoriesTableProps = {
   categoriesData: TCategoryRecord[],
@@ -13,7 +17,10 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
 
   const [data, setData] = useState<TCategoryRecord[]>([])
 
-  const {newCategory: {toggleModal}} = useModalStore()
+  const {
+    newCategory: {toggleModal: toggleNewCategoryModal},
+    deleteConfirmation: {toggleModal: toggleDeleteCategoryModal}
+  } = useModalStore()
 
   React.useEffect(() => {
     if (categoriesData.length){
@@ -33,13 +40,10 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
       width: "20%",
     },
     {
-      title: !isSettingsTable ? "current" :  <Button
-          size='small'
-          variant='solid'
-          color='cyan'
-          icon={<PlusOutlined />}
-          onClick={() => toggleModal({value: true, type: "addCategory"})}
-          />,
+      title: !isSettingsTable ? "current" :  <SquareButton 
+        title='add category'
+        onClick={() => toggleNewCategoryModal(true, {type: "addCategory"})} />
+      ,
       dataIndex: !isSettingsTable ? "current" : "edit",
       onHeaderCell: () => ({
         style: {
@@ -48,14 +52,20 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
         }
       }),
       width: "20%",
-      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <div style={{display: "flex", justifyContent: "space-around"}}>
-          <Button 
-          onClick={() => {
-              toggleModal({value: true, type: "editCategory", data: {...record, originalName: record.name}})
-            }} 
-          type='link'
-          size='small'>edit</Button>
-        
+      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+        <SquareButton
+          icon={<EditOutlined/>}
+          title={"edit category"}
+          onClick={() =>  toggleNewCategoryModal(true, {...record, originalName: record.name})}
+          isTiny
+        />
+        <SquareButton
+          icon={<DeleteOutlined />}
+          title={"delete category"}
+          color='orange'
+          onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteFunction: () => console.log("delete")})}
+          isTiny
+          />        
         </div>
          : data
     }

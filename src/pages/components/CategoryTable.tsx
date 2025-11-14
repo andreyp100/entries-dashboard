@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import type { ICategory, TCategoryRecord } from '../../types/types'
+import type { TCategoryRecord } from '../../types/types'
 import { Button, Table, type TableProps } from 'antd'
 import { useModalStore } from '../../store/store'
+import {PlusOutlined} from '@ant-design/icons'
 
 type TCategoriesTableProps = {
   categoriesData: TCategoryRecord[],
@@ -32,14 +33,31 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
       width: "20%",
     },
     {
-      title: !isSettingsTable ? "current" : "",
+      title: !isSettingsTable ? "current" :  <Button
+          size='small'
+          variant='solid'
+          color='cyan'
+          icon={<PlusOutlined />}
+          onClick={() => toggleModal({value: true, type: "addCategory"})}
+          />,
       dataIndex: !isSettingsTable ? "current" : "edit",
+      onHeaderCell: () => ({
+        style: {
+          display: "flex",
+          justifyContent: "space-around"
+        }
+      }),
       width: "20%",
-      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <Button 
-        onClick={() => {
-          toggleModal({value: true, type: "editCategory", data: {...record, originalName: record.name}})
-        }} 
-        type='link' size='small'>edit</Button> : data
+      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <div style={{display: "flex", justifyContent: "space-around"}}>
+          <Button 
+          onClick={() => {
+              toggleModal({value: true, type: "editCategory", data: {...record, originalName: record.name}})
+            }} 
+          type='link'
+          size='small'>edit</Button>
+        
+        </div>
+         : data
     }
   ]
 

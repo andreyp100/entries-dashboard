@@ -48,6 +48,7 @@ export interface ICategoryStore {
   categories: ICategory[];
   addCategory: (category: ICategory) => void,
   updateCategories: (categories: ICategory[]) => void,
+  editCategory: (category: ICategory) => void,
   status: TFetchStatus
   setStatus: (status: TFetchStatus) => void;
 }

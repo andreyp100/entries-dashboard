@@ -18,7 +18,18 @@ export const useCategoryStore = create<ICategoryStore>((set, get) => {
     status: "idle",
     setStatus: (updatedStatus: TFetchStatus) => set(() => ({status: updatedStatus})),
     categories: [],
-    addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category]})),
+    addCategory: (category: ICategory) => set((state) => ({categories: [...state.categories, category].sort((a,b) => b.limit - a.limit)})),
+    editCategory: (category: ICategory) => set((state) => {
+      const categoryToReplace = state.categories.find(c => c.name === category.name);
+      if (categoryToReplace){
+        const categoryIndex = state.categories.indexOf(categoryToReplace)
+        const categoriesTemp = [...state.categories]
+        categoriesTemp.splice(categoryIndex, 1, category)
+        return {categories: categoriesTemp}
+      } else {
+        return {categories: state.categories}
+      }
+    }),
     updateCategories: (categories: ICategory[]) => set(() => ({categories: categories}))
   }
 })
@@ -90,8 +101,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         endpoint: "/category/add",
         data: category,
         storeMethod: 
-          // useCategoryStore.getState().addCategory
-          () => {console.log("test store method")}
+          useCategoryStore.getState().addCategory
           ,
         store: "categories"
       }),
@@ -99,7 +109,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         method: "post",
         endpoint: "/category/edit",
         data: category,
-        storeMethod: useCategoryStore.getState().updateCategories,
+        storeMethod: useCategoryStore.getState().editCategory,
         store: "categories"
       })
     }

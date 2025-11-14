@@ -27,11 +27,6 @@ export const MainPage = () => {
     setPrimaryCategories(categoryStore.categories)
   }, [categoryStore.categories])
 
-  React.useEffect(() => {
-    console.log("categoryStore.status: ", categoryStore.status);
-    
-  }, [categoryStore.status])
-
 
   return (
     <Flex vertical gap={50} justify='flex-start'>

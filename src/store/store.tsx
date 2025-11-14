@@ -30,6 +30,7 @@ export const useCategoryStore = create<ICategoryStore>((set, get) => {
         return {categories: state.categories}
       }
     }),
+    deleteCategory: (category: ICategory) => set((state) => ({categories: [...state.categories.filter(c => c.name != category.name)]})),
     updateCategories: (categories: ICategory[]) => set(() => ({categories: categories}))
   }
 })
@@ -60,9 +61,8 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
          stores[store].getState().setStatus("success")
       }
     } catch (err: any){   
-      console.log("axios err catch: ", err);
-         
       stores[store].getState().setStatus("error")
+      throw err
     }
   }
 
@@ -100,8 +100,7 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         endpoint: "/category/add",
         data: category,
         storeMethod: 
-          useCategoryStore.getState().addCategory
-          ,
+          useCategoryStore.getState().addCategory,
         store: "categories"
       }),
       editCategory: (category: ICategory) => apiRequest({
@@ -109,6 +108,13 @@ export const useFetchStore = create<IFetchStore>((set, get) => {
         endpoint: "/category/edit",
         data: category,
         storeMethod: useCategoryStore.getState().editCategory,
+        store: "categories"
+      }),
+      deleteCategory: (category: ICategory) => apiRequest({
+        method: "delete",
+        endpoint: "/category/delete",
+        data: category,
+        storeMethod: useCategoryStore.getState().deleteCategory,
         store: "categories"
       })
     }
@@ -135,7 +141,7 @@ export const useModalStore = create<IModalStore>((set, get) => {
     newCategory: {
       name: "newCategory",
       isOpen: false,
-      toggleModal: (toggleValue: boolean, data: any) => updateModalState(toggleValue, "newCategory", data)
+      toggleModal: (toggleValue: boolean, data: any) => updateModalState(toggleValue, "newCategory", data),
     },
     deleteConfirmation: {
       name: "deleteConfirmation",

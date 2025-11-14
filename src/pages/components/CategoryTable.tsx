@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import type { TCategoryRecord } from '../../types/types'
-import { Button, Table, type TableProps } from 'antd'
-import { useModalStore } from '../../store/store'
-import {PlusOutlined} from '@ant-design/icons'
+import type { ICategory, TCategoryRecord } from '../../types/types'
+import { Table, type TableProps } from 'antd'
+import { useFetchStore, useModalStore } from '../../store/store'
 import { EditOutlined } from '@ant-design/icons'
 import { SquareButton } from './Buttons/SquareButton'
 import { DeleteOutlined } from '@ant-design/icons'
@@ -16,6 +15,7 @@ type TCategoriesTableProps = {
 const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps) => {
 
   const [data, setData] = useState<TCategoryRecord[]>([])
+  const fetchStore = useFetchStore()
 
   const {
     newCategory: {toggleModal: toggleNewCategoryModal},
@@ -42,7 +42,7 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
     {
       title: !isSettingsTable ? "current" :  <SquareButton 
         title='add category'
-        onClick={() => toggleNewCategoryModal(true, {type: "addCategory"})} />
+        onClick={() => toggleNewCategoryModal(true, {formType: "addCategory"})} />
       ,
       dataIndex: !isSettingsTable ? "current" : "edit",
       onHeaderCell: () => ({
@@ -56,14 +56,14 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
         <SquareButton
           icon={<EditOutlined/>}
           title={"edit category"}
-          onClick={() =>  toggleNewCategoryModal(true, {...record, originalName: record.name})}
+          onClick={() =>  toggleNewCategoryModal(true, {formType: "editCategory", categoryData: {...record, originalName: record.name}})}
           isTiny
         />
         <SquareButton
           icon={<DeleteOutlined />}
           title={"delete category"}
           color='orange'
-          onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteFunction: () => console.log("delete")})}
+          onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteName: record.name, deleteFunction: (c: ICategory) => fetchStore.deleteCategory(c)})}
           isTiny
           />        
         </div>

@@ -10,7 +10,8 @@ export interface IFetchStore {
   addEntry: TApiMethod<IEntry>,
   removeEntry: TApiMethod<number>
   getCategories: TApiMethod,
-  addCategory: TApiMethod<string>
+  addCategory: TApiMethod<string>,
+  deleteCategory: TApiMethod<ICategory>
 }
 
 export interface IApiRequestConfig<T = any> {
@@ -52,6 +53,7 @@ export interface ICategoryStore {
   addCategory: (category: ICategory) => void,
   updateCategories: (categories: ICategory[]) => void,
   editCategory: (category: ICategory) => void,
+  deleteCategory: (category: ICategory) => void,
   status: TFetchStatus
   setStatus: (status: TFetchStatus) => void;
 }
@@ -68,7 +70,8 @@ export interface IModalProps {
   isOpen: boolean,
   type?: string
   toggleModal: (toggleValue: boolean, data?: any) => void,
-  data?: any
+  data?: any,
+  error?: string
 }
 
 
@@ -89,6 +92,11 @@ export interface IButtonProps {
   color?: ButtonColorType,
   isTiny?: boolean
   icon?: ReactNode
+}
+
+export interface IError {
+  status: number,
+  message: string
 }
 
 

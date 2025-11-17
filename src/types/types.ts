@@ -24,6 +24,7 @@ export interface IApiRequestConfig<T = any> {
 }
 
 export interface ICategory {
+  id?: number,
   name: string,
   isPrimary: boolean,
   limit: number,
@@ -77,7 +78,7 @@ export interface IModalProps {
 
 export interface IModalStore {
   newEntry: IModalProps,
-  newCategory: IModalProps,
+  category: IModalProps,
   deleteConfirmation: IModalProps
 }
 

@@ -4,14 +4,14 @@ import { useCategoryStore, useFetchStore, useModalStore } from '../../store/stor
 import { type IError, type ICategory, type IFetchStore } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
 
-export const NewCategoryModal = () => {
+export const CategoryModal = () => {
 
   
   const fetchStore = useFetchStore()
   const {status} = useCategoryStore()
-  const {newCategory: {isOpen, toggleModal, data}} = useModalStore()
+  const {category: {isOpen, toggleModal, data}} = useModalStore()
 
-  const initialFormState: ICategory & {originalName?: string} = {
+  const initialFormState: ICategory = {
     name: "",
     limit: 0,
     isPrimary: false
@@ -20,7 +20,7 @@ export const NewCategoryModal = () => {
   const [error, setError] = React.useState<IError | null>(null)
   
   const updateCategory = () => {
-    fetchStore[`${data?.formType as keyof IFetchStore}`](formState)
+    fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData.id})
 
     .then((res) => {
       if (status === "success"){

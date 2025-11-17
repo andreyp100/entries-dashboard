@@ -4,7 +4,7 @@ import MainTable from './components/MainTable'
 import {PlusOutlined} from '@ant-design/icons'
 import { NewEntryModal } from './Modals/NewEntryModal'
 import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../store/store'
-import { NewCategoryModal } from './Modals/NewCategoryModal'
+import { CategoryModal } from './Modals/CategoryModal'
 import CategoryTable from './components/CategoryTable'
 import type { TCategoryRecord } from '../types/types'
 import { SquareButton } from './components/Buttons/SquareButton'
@@ -39,7 +39,7 @@ export const MainPage = () => {
         />
         <MainTable />
         <NewEntryModal />
-        <NewCategoryModal />
+        <CategoryModal />
       </Flex>
 
     </Flex>

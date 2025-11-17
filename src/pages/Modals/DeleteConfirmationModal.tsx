@@ -1,7 +1,7 @@
 import { Alert, Modal } from 'antd'
 import { useModalStore } from '../../store/store'
 import { AxiosError } from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const DeleteConfirmationModal = () => {
 
@@ -11,17 +11,20 @@ export const DeleteConfirmationModal = () => {
     if (data){
 
       const {deleteFunction, contents} = data;
-      console.log("contents: ", contents);
       try {
-        return deleteFunction(contents)
+        return deleteFunction(contents.id).then(() => toggleModal(false))
       } catch (err: any) {
-        console.log("delete err: ", err);
-        
         setError(error)
       }
       }
        
   }
+
+  useEffect(() => {
+    if (!isOpen){
+      setError(null)
+    }
+  }, [isOpen])
   
 
 
@@ -32,14 +35,14 @@ export const DeleteConfirmationModal = () => {
       setError(err)
       console.log('delete err: ', err)
     })}}
-    onCancel={() => toggleModal(false)}
+    onCancel={() => {
+      toggleModal(false)
+    }}
   >
     Confirm deletion of {data?.deleteName}
      {error && <Alert
               message={error.message}
               type="warning"
-              // closable
-              // onClose={() => setError(null)}
             />}
     </Modal>
 }

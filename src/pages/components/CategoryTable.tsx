@@ -18,12 +18,12 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
   const fetchStore = useFetchStore()
 
   const {
-    newCategory: {toggleModal: toggleNewCategoryModal},
+    category: {toggleModal: toggleNewCategoryModal},
     deleteConfirmation: {toggleModal: toggleDeleteCategoryModal}
   } = useModalStore()
 
   React.useEffect(() => {
-    if (categoriesData.length){
+    if (categoriesData.length){      
       setData(categoriesData)
     }
   }, [categoriesData])
@@ -56,14 +56,14 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
         <SquareButton
           icon={<EditOutlined/>}
           title={"edit category"}
-          onClick={() =>  toggleNewCategoryModal(true, {formType: "editCategory", categoryData: {...record, originalName: record.name}})}
+          onClick={() =>  toggleNewCategoryModal(true, {formType: "editCategory", categoryData: record})}
           isTiny
         />
         <SquareButton
           icon={<DeleteOutlined />}
           title={"delete category"}
           color='orange'
-          onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteName: record.name, deleteFunction: (c: ICategory) => fetchStore.deleteCategory(c)})}
+          onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteName: record.name, deleteFunction: (id: ICategory["id"]) => fetchStore.deleteCategory(id)})}
           isTiny
           />        
         </div>

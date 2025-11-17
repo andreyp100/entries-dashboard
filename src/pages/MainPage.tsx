@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {Button, Flex} from 'antd'
+import { Flex} from 'antd'
 import MainTable from './components/MainTable'
-import {PlusOutlined} from '@ant-design/icons'
 import { NewEntryModal } from './Modals/NewEntryModal'
-import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../store/store'
+import { useCategoryStore, useFetchStore, useModalStore } from '../store/store'
 import { CategoryModal } from './Modals/CategoryModal'
 import CategoryTable from './components/CategoryTable'
 import type { TCategoryRecord } from '../types/types'
@@ -11,7 +10,6 @@ import { SquareButton } from './components/Buttons/SquareButton'
 
 export const MainPage = () => {
 
-  const entryStore = useEntryStore()
   const modalStore = useModalStore()
   const categoryStore = useCategoryStore()
   const {getEntries, getCategories} = useFetchStore()
@@ -20,8 +18,6 @@ export const MainPage = () => {
   React.useEffect(() => {
     getEntries()
     getCategories()
-    if (entryStore.status !== "loading"){
-    }
   }, [])
 
   React.useEffect(() => {
@@ -35,7 +31,7 @@ export const MainPage = () => {
       <Flex vertical gap={10}>
         <SquareButton 
           title={"add entry"}
-          onClick={() => modalStore.newEntry.toggleModal({value: true})}
+          onClick={() => modalStore.newEntry.toggleModal(true)}
         />
         <MainTable />
         <NewEntryModal />

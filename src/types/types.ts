@@ -31,7 +31,7 @@ export interface ICategory {
   originalName?: string
 }
 
-export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number}
+export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number, left?: number}
 
 export interface IEntry {
   id: number,

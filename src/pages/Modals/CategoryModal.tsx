@@ -20,7 +20,7 @@ export const CategoryModal = () => {
   const [error, setError] = React.useState<IError | null>(null)
   
   const updateCategory = () => {
-    fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData.id})
+    fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData?.id})
 
     .then((res) => {
       if (status === "success"){

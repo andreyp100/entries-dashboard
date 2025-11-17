@@ -32,27 +32,31 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
     {
       title: "name",
       dataIndex: "name",
-      width: "60%",
+      width: "40%",
     },
     {
       title: "limit",
       dataIndex: "limit",
-      width: "20%",
+      width: "15%",
     },
     {
       title: !isSettingsTable ? "current" :  <SquareButton 
         title='add category'
         onClick={() => toggleNewCategoryModal(true, {formType: "addCategory"})} />
       ,
-      dataIndex: !isSettingsTable ? "current" : "edit",
+      dataIndex: !isSettingsTable ? "currentSpent" : "edit",
       onHeaderCell: () => ({
         style: {
           display: "flex",
           justifyContent: "space-around"
         }
       }),
-      width: "20%",
-      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+      width: "15%",
+      render: (data:any, record: TCategoryRecord) => isSettingsTable ? <div style={{
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+        }}>
         <SquareButton
           icon={<EditOutlined/>}
           title={"edit category"}
@@ -68,17 +72,34 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
           />        
         </div>
          : data
+    },
+    {
+      title: "left",
+      dataIndex: "left",
+      width: "15%"
     }
   ]
 
   const columnsData: TableProps<TCategoryRecord>['columns'] = columns.map((col, i) => {
+    
     return {
       ...col,
       key: i,
+        onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#bbdee7ff"
+        }
+      }),
       onCell: (record: TCategoryRecord) => ({
         record,
         dataIndex: col.dataIndex,
-        title: col.title as any
+        title: col.title as any,
+        style: {
+          padding: "3px",
+          paddingLeft: col.dataIndex === "edit" ? 0 : "10px",
+          backgroundColor: "#e1e7eeff",
+          fontSize: "0.925rem"
+        }
       })
     }
   })
@@ -90,7 +111,7 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
     <Table 
       bordered
       dataSource={data}
-      columns={columnsData}
+      columns={!isSettingsTable ? columnsData : columnsData.slice(0,3)}
       size='small'
       style={{
         maxWidth: "30%"

@@ -8,7 +8,7 @@ function App() {
   const tabItems: TabsProps['items'] = [
     {
       key: '1',
-      label: 'MainPage',
+      label: 'Current month',
       children: <MainPage />
     },
     {
@@ -25,7 +25,8 @@ function App() {
             components: {
               Tabs: {
                 colorPrimary: "#13c2c2",
-                itemColor: "#8c8c8c"
+                itemColor: "#8c8c8c",
+                 itemHoverColor: "#6ca1a1ff"
               }
             }
           }}

@@ -1,3 +1,6 @@
+import type { ButtonColorType } from "antd/es/button";
+import type { ReactNode } from "react";
+
 export type TFetchStatus = "idle" | "loading" | "success" | "error";
 
 export type TApiMethod<T = undefined> = (data?: T | any) => Promise<void>
@@ -7,7 +10,8 @@ export interface IFetchStore {
   addEntry: TApiMethod<IEntry>,
   removeEntry: TApiMethod<number>
   getCategories: TApiMethod,
-  addCategory: TApiMethod<string>
+  addCategory: TApiMethod<string>,
+  deleteCategory: TApiMethod<ICategory>
 }
 
 export interface IApiRequestConfig<T = any> {
@@ -20,13 +24,14 @@ export interface IApiRequestConfig<T = any> {
 }
 
 export interface ICategory {
+  id?: number,
   name: string,
   isPrimary: boolean,
   limit: number,
   originalName?: string
 }
 
-export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number}
+export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number, left?: number}
 
 export interface IEntry {
   id: number,
@@ -48,31 +53,51 @@ export interface ICategoryStore {
   categories: ICategory[];
   addCategory: (category: ICategory) => void,
   updateCategories: (categories: ICategory[]) => void,
+  editCategory: (category: ICategory) => void,
+  deleteCategory: (category: ICategory) => void,
   status: TFetchStatus
   setStatus: (status: TFetchStatus) => void;
 }
 
 export type TNewEntry  = Omit<IEntry, "id" | "category"> & {categoryName: string}
 
-export type TModalDataProps = {value: boolean, data?: any, type?: string, }
+export interface IModalData {
+  value: boolean,
+  data?: any
+}
 
 export interface IModalProps {
   name: string,
   isOpen: boolean,
   type?: string
-  toggleModal: (modalData: TModalDataProps) => void,
-  data?: TModalDataProps["data"]
+  toggleModal: (toggleValue: boolean, data?: any) => void,
+  data?: any,
+  error?: string
 }
 
 
 export interface IModalStore {
   newEntry: IModalProps,
-  newCategory: IModalProps
+  category: IModalProps,
+  deleteConfirmation: IModalProps
 }
 
 export interface ICategorySelectOptions {
   label: string,
   value: string
+}
+
+export interface IButtonProps {
+  onClick: (args: any) => void,
+  title: string,
+  color?: ButtonColorType,
+  isTiny?: boolean
+  icon?: ReactNode
+}
+
+export interface IError {
+  status: number,
+  message: string
 }
 
 

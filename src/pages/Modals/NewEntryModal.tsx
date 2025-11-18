@@ -26,18 +26,8 @@ export const NewEntryModal = () => {
   }
 
   const handleSubmitNewEntryForm = () => {
-    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && toggleModal({value: false}))
+    fetchStore.addEntry(formState).then(() => entryStore.status === "success" && toggleModal(false))
   }
-
-  // React.useEffect(() => {
-  //   setCategorySelectOptions(() => {
-  //     return categories.map(esc => ({
-  //       label: esc.name,
-  //       value: esc.name
-  //     })) 
-  //   })
-  // }, [])
-
 
   React.useEffect(() => {
     setFormState(initialFormState)
@@ -54,7 +44,7 @@ export const NewEntryModal = () => {
   return (
     <Modal
       open={isOpen}
-      onCancel={() => toggleModal({value: false})}
+      onCancel={() => toggleModal(false)}
       title={name}
       okButtonProps={{
         onClick: () => handleSubmitNewEntryForm()

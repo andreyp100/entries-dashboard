@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import type { TableProps } from 'antd';
-import { Button, Table } from 'antd';
+import { Table } from 'antd';
 import type { IEntry } from '../../types/types';
 import { useEntryStore, useModalStore } from '../../store/store';
-import {PlusOutlined} from '@ant-design/icons'
 
 
 const MainTable: React.FC = () => {
   const [data, setData] = useState<IEntry[]>([]);
 
   const entriesData = useEntryStore()
-  const modalStore = useModalStore()
 
   React.useEffect(() => {
     setData(entriesData.entries.map(e => {
@@ -36,20 +34,7 @@ const MainTable: React.FC = () => {
       width: '15%',
     },
     {
-      title: (<span className="flexTableHeader">
-        category
-        <Button 
-          style={{
-            marginRight: 10
-          }}
-          size='small'
-          variant='solid'
-          color='cyan'
-          icon={<PlusOutlined />}
-          onClick={() => modalStore.newCategory.toggleModal({value: true, type: "addCategory"})}
-          />
-      </span>)
-      ,
+      title: "category",
       dataIndex: 'categoryName',
       width: '40%',
     },
@@ -59,10 +44,21 @@ const MainTable: React.FC = () => {
     return {
       ...col,
       key: i,
+      onHeaderCell: () => ({
+        style: {
+          backgroundColor: "#bbdee7ff"
+        }
+      }),
       onCell: (record: IEntry) => ({
         record,
         dataIndex: col.dataIndex,
         title: col.title as any,
+        style: {
+          padding: "3px",
+          paddingLeft: "10px",
+          backgroundColor: "#e1e7eeff",
+          fontSize: "0.875rem"
+        }
       }),
     };
   });

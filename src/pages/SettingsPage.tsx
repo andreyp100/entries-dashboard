@@ -3,6 +3,7 @@ import React from 'react'
 import CategoryTable from './components/CategoryTable'
 import { useCategoryStore } from '../store/store'
 import { type ICategory } from '../types/types'
+import { DeleteConfirmationModal } from './Modals/DeleteConfirmationModal'
 
 export const SettingsPage = () => {
 
@@ -17,6 +18,7 @@ export const SettingsPage = () => {
   return (
     <Flex vertical gap={50}>
       <CategoryTable categoriesData={categoriesData} isSettingsTable/>
+      <DeleteConfirmationModal />
     </Flex>
   )
 }

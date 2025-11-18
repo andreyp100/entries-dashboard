@@ -1,44 +1,40 @@
-import { Checkbox, Form, Input, Modal } from 'antd'
+import { Alert, Checkbox, Form, Input, Modal } from 'antd'
 import * as React from 'react'
-import { useCategoryStore, useEntryStore, useFetchStore, useModalStore } from '../../store/store'
-import type { ICategory, IFetchStore } from '../../types/types'
+import { useCategoryStore, useFetchStore, useModalStore } from '../../store/store'
+import { type IError, type ICategory, type IFetchStore } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
 
-export const NewCategoryModal = () => {
+export const CategoryModal = () => {
 
   
   const fetchStore = useFetchStore()
   const {status} = useCategoryStore()
-  const {newCategory: {isOpen, toggleModal, type, data}} = useModalStore()
+  const {category: {isOpen, toggleModal, data}} = useModalStore()
 
-  const initialFormState: ICategory & {originalName?: string} = {
+  const initialFormState: ICategory = {
     name: "",
     limit: 0,
     isPrimary: false
   }
   const [formState, setFormState] = React.useState(initialFormState)
+  const [error, setError] = React.useState<IError | null>(null)
   
   const updateCategory = () => {
-    console.log("type: ", type);
-    
-    fetchStore[`${type as keyof IFetchStore}`](formState)
-
+    fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData?.id})
 
     .then((res) => {
       if (status === "success"){
-        console.log("status (", type, ") is: ", status);
-        console.log("res: ", res)
-        toggleModal({value: false})
+        toggleModal(false)
       } else {
         console.log(`status not success (${status})`)}
       }
-    ) 
+    )
+    .catch((err:any) => {
+      console.log("err: ", err);
+      
+      setError(err.response.data)}) 
   }
 
-  React.useEffect(() => {
-    console.log("isOpen: ", isOpen);
-    
-  }, [isOpen])
 
   const handleChangeFormState = (field: keyof ICategory, value: string | boolean) => {
     setFormValue(formState, field, value, setFormState)
@@ -46,18 +42,21 @@ export const NewCategoryModal = () => {
 
   React.useEffect(() => {
     setFormState(isOpen ? {
-      name: data?.name || initialFormState.name,
-      limit: data?.limit || initialFormState.limit,
-      isPrimary: data?.isPrimary || initialFormState.isPrimary,
-      originalName: data?.originalName || undefined
+      name: data?.categoryData?.name || initialFormState.name,
+      limit: data?.categoryData?.limit || initialFormState.limit,
+      isPrimary: data?.categoryData?.isPrimary || initialFormState.isPrimary,
+      originalName: data?.categoryData?.originalName || undefined
   } : initialFormState)
-  }, [isOpen])
+  }, [isOpen, data])
 
   return (
     <Modal
       open={isOpen}
-      onCancel={() => toggleModal({value: false})}
-      title={type === "editCategory" ? "edit category" : "new category"}
+      onCancel={() => {
+        toggleModal(false)
+        setError(null)
+      }}
+      title={data?.formType === "editCategory" ? "edit category" : "new category"}
       okButtonProps={{
         onClick: () => {
           updateCategory()
@@ -84,7 +83,7 @@ export const NewCategoryModal = () => {
               <Input 
                 value={formState.limit}
                 onChange={(e) => {
-                  handleChangeFormState("limit", e.target.value)
+                  handleChangeFormState("limit", e.target.value || "0")
                 }}
                 placeholder='limit'
               />
@@ -97,7 +96,12 @@ export const NewCategoryModal = () => {
                   is primary
                 </Checkbox>
             </Form.Item>
-          
+          {error && <Alert
+              message={error.message}
+              type="warning"
+              closable
+              onClose={() => setError(null)}
+            />}
         </Form>
 
     </Modal>)

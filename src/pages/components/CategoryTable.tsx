@@ -97,7 +97,7 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
         style: {
           padding: "3px",
           paddingLeft: col.dataIndex === "edit" ? 0 : "10px",
-          backgroundColor: "#e1e7eeff",
+          backgroundColor: record.isPrimary ? "#c8d9e9ff" : "#e1e7eeff",
           fontSize: "0.925rem"
         }
       })

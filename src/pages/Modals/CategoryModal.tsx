@@ -1,8 +1,9 @@
-import { Alert, Checkbox, Form, Input, Modal } from 'antd'
+import { Alert, Checkbox, DatePicker, Form, Input, Modal } from 'antd'
 import * as React from 'react'
 import { useCategoryStore, useFetchStore, useModalStore } from '../../store/store'
 import { type IError, type ICategory, type IFetchStore } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
+import type { Dayjs } from 'dayjs'
 
 export const CategoryModal = () => {
 
@@ -14,10 +15,21 @@ export const CategoryModal = () => {
   const initialFormState: ICategory = {
     name: "",
     limit: 0,
-    isPrimary: false
+    isPrimary: false,
   }
   const [formState, setFormState] = React.useState(initialFormState)
   const [error, setError] = React.useState<IError | null>(null)
+
+  const onDateChange = (date: Dayjs) => {
+    console.log("month: ", date.month());
+    
+    let isDecember = date.month() === 11
+
+    const categoryDatesRange = {
+      from: new Date(`${date.year()}, ${date.month() + 1}, 19`).getTime(),
+      to: new Date(`${date.year() + Number(isDecember)}, ${!isDecember ? date.month() + 2 : 1}, 19`).getTime() - 1
+    }
+  }
   
   const updateCategory = () => {
     fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData?.id})
@@ -30,8 +42,6 @@ export const CategoryModal = () => {
       }
     )
     .catch((err:any) => {
-      console.log("err: ", err);
-      
       setError(err.response.data)}) 
   }
 
@@ -45,7 +55,6 @@ export const CategoryModal = () => {
       name: data?.categoryData?.name || initialFormState.name,
       limit: data?.categoryData?.limit || initialFormState.limit,
       isPrimary: data?.categoryData?.isPrimary || initialFormState.isPrimary,
-      originalName: data?.categoryData?.originalName || undefined
   } : initialFormState)
   }, [isOpen, data])
 
@@ -87,6 +96,9 @@ export const CategoryModal = () => {
                 }}
                 placeholder='limit'
               />
+            </Form.Item>
+            <Form.Item>
+              <DatePicker onChange={onDateChange} picker="month" />
             </Form.Item>
              <Form.Item>
               <Checkbox

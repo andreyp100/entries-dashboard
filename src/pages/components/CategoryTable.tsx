@@ -114,7 +114,7 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
       columns={!isSettingsTable ? columnsData : columnsData.slice(0,3)}
       size='small'
       style={{
-        maxWidth: "30%"
+        maxWidth: "40%"
       }}
       pagination={false}
       

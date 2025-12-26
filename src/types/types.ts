@@ -28,13 +28,14 @@ export interface ICategory {
   name: string,
   isPrimary: boolean,
   limit: number,
+  monthYear: number
 }
 
 export type TCategoryRecord = ICategory & {currentSpent?: number, left?: number}
 
 export interface IEntry {
   id: number,
-  date: number,
+  date: number | string,
   name: string,
   sum: number | '',
   category: ICategory

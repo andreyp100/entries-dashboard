@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import type { IEntry } from '../../types/types';
-import { useEntryStore, useModalStore } from '../../store/store';
+import { useEntryStore } from '../../store/store';
 
 
 const MainTable: React.FC = () => {
@@ -12,7 +12,7 @@ const MainTable: React.FC = () => {
 
   React.useEffect(() => {
     setData(entriesData.entries.map(e => {
-      return {...e, date: new Date(e.date).toLocaleString("ru-RU")} as any
+      return {...e, date: new Date(e.date).toLocaleString("ru-RU")} as IEntry
     }))
   }, [entriesData.entries])
 

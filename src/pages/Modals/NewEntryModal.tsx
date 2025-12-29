@@ -16,7 +16,8 @@ export const NewEntryModal = () => {
     date: Date.now(),
     name: "",
     sum: "",
-    categoryName: ""
+    categoryName: "",
+    info: ""
   }
   const [formState, setFormState] = React.useState<TNewEntry>(initialFormState)
   const [categorySelectOptions, setCategorySelectOptions] = React.useState<ICategorySelectOptions[]>([])
@@ -78,6 +79,14 @@ export const NewEntryModal = () => {
                 handleChangeFormState("sum", e.target.value)
               }}
               value={formState.sum}
+              />
+          </Form.Item>
+            <Form.Item label="info">
+            <Input 
+              onChange={(e) => {
+                handleChangeFormState("info", e.target.value)
+              }}
+              value={formState.info}
               />
           </Form.Item>
           <Form.Item label="category">

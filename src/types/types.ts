@@ -43,7 +43,8 @@ export interface IEntry {
   date: number | string,
   name: string,
   sum: number | '',
-  category: ICategory
+  category: ICategory,
+  info: string
 }
 
 export interface IEntryStore {

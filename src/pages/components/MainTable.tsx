@@ -26,17 +26,22 @@ const MainTable: React.FC = () => {
     {
       title: 'name',
       dataIndex: 'name',
-      width: '30%',
+      width: '20%',
     },
     {
       title: 'sum',
       dataIndex: 'sum',
-      width: '15%',
+      width: '5%',
     },
     {
       title: "category",
       dataIndex: 'categoryName',
-      width: '40%',
+      width: '20%',
+    },
+      {
+      title: "info",
+      dataIndex: 'info',
+      width: '35%',
     },
   ];
 
@@ -57,7 +62,8 @@ const MainTable: React.FC = () => {
           padding: "3px",
           paddingLeft: "10px",
           backgroundColor: "#e1e7eeff",
-          fontSize: "0.875rem"
+          fontSize: "0.875rem",
+          textWrap: "wrap"
         }
       }),
     };

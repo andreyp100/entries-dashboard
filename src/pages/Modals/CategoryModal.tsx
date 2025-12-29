@@ -1,7 +1,7 @@
 import { Alert, Checkbox, DatePicker, Form, Input, Modal } from 'antd'
 import * as React from 'react'
 import { useCategoryStore, useFetchStore, useModalStore } from '../../store/store'
-import { type IError, type ICategory, type IFetchStore } from '../../types/types'
+import { type IError, type ICategory, type IFetchStore, type ICategoryMonth } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
@@ -17,13 +17,20 @@ export const CategoryModal = () => {
     name: "",
     limit: 0,
     isPrimary: false,
-    monthYear: new Date().getTime()
+    categoryMonth: {
+      month: new Date().getMonth(),
+      year: new Date().getFullYear()
+    }
+    
   }
   const [formState, setFormState] = React.useState(initialFormState)
   const [error, setError] = React.useState<IError | null>(null)
 
   const onDateChange = (date: Dayjs) => {
-    handleChangeFormState("monthYear",  date.valueOf())
+    handleChangeFormState("categoryMonth",  {
+      month: date.month(),
+      year: date.year()
+    })
   }
   
   const updateCategory = () => {
@@ -41,7 +48,7 @@ export const CategoryModal = () => {
   }
 
 
-  const handleChangeFormState = (field: keyof ICategory, value: string | number | boolean) => {
+  const handleChangeFormState = (field: keyof ICategory, value: string | number | boolean | ICategoryMonth) => {
     setFormValue(formState, field, value, setFormState)
   }
 
@@ -50,7 +57,11 @@ export const CategoryModal = () => {
       name: data?.categoryData?.name || initialFormState.name,
       limit: data?.categoryData?.limit || initialFormState.limit,
       isPrimary: data?.categoryData?.isPrimary || initialFormState.isPrimary,
-      monthYear: data?.categoryData?.monthYear || initialFormState.monthYear
+      categoryMonth: {
+        month: data?.categoryData?.categoryMonth.month || initialFormState.categoryMonth.month,
+        year: data?.categoryData?.categoryMonth.year || initialFormState.categoryMonth.year,
+      }
+      
   } : initialFormState)
   }, [isOpen, data])
   return (
@@ -93,7 +104,7 @@ export const CategoryModal = () => {
               />
             </Form.Item>
             <Form.Item>
-              <DatePicker onChange={onDateChange} value={dayjs(formState.monthYear)} picker="month" />
+              <DatePicker onChange={onDateChange} value={dayjs(new Date(formState.categoryMonth.year, formState.categoryMonth.month, 1))} picker="month" />
             </Form.Item>
              <Form.Item>
               <Checkbox

@@ -19,27 +19,27 @@ const MainTable: React.FC = () => {
 
   const columns = [
     {
-      title: 'date',
+      title: 'Дата',
       dataIndex: 'date',
       width: '20%',
     },
     {
-      title: 'name',
+      title: 'Название траты',
       dataIndex: 'name',
       width: '20%',
     },
     {
-      title: 'sum',
+      title: 'Сумма',
       dataIndex: 'sum',
       width: '5%',
     },
     {
-      title: "category",
+      title: "Категория",
       dataIndex: 'categoryName',
       width: '20%',
     },
       {
-      title: "info",
+      title: "Заметки",
       dataIndex: 'info',
       width: '35%',
     },

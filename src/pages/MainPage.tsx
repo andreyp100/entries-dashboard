@@ -30,7 +30,7 @@ export const MainPage = () => {
       <CategoryTable categoriesData={primaryCategories}/>
       <Flex vertical gap={10}>
         <SquareButton 
-          title={"add entry"}
+          title={"Добавить запись"}
           onClick={() => modalStore.newEntry.toggleModal(true)}
         />
         <MainTable />

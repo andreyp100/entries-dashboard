@@ -30,18 +30,18 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
 
   const columns = [
     {
-      title: "name",
+      title: "Название",
       dataIndex: "name",
       width: "40%",
     },
     {
-      title: "limit",
+      title: "Лимит",
       dataIndex: "limit",
       width: "15%",
     },
     {
-      title: !isSettingsTable ? "current" :  <SquareButton 
-        title='add category'
+      title: !isSettingsTable ? "Потрачено" :  <SquareButton 
+        title='Новая категория'
         onClick={() => toggleNewCategoryModal(true, {formType: "addCategory"})} />
       ,
       dataIndex: !isSettingsTable ? "currentSpent" : "edit",
@@ -59,13 +59,13 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
         }}>
         <SquareButton
           icon={<EditOutlined/>}
-          title={"edit category"}
+          title={"Редактировать"}
           onClick={() =>  toggleNewCategoryModal(true, {formType: "editCategory", categoryData: record})}
           isTiny
         />
         <SquareButton
           icon={<DeleteOutlined />}
-          title={"delete category"}
+          title={"Удалить"}
           color='orange'
           onClick={() => toggleDeleteCategoryModal(true, {contents: record, deleteType: "delete category", deleteName: record.name, deleteFunction: (id: ICategory["id"]) => fetchStore.deleteCategory(id)})}
           isTiny
@@ -74,7 +74,7 @@ const CategoryTable = ({categoriesData, isSettingsTable}: TCategoriesTableProps)
          : data
     },
     {
-      title: "left",
+      title: "Остаток",
       dataIndex: "left",
       width: "15%"
     }

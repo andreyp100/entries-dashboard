@@ -2,21 +2,27 @@ import { ConfigProvider, Tabs, type TabsProps } from 'antd'
 import './App.css'
 import { MainPage } from './pages/MainPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { DashboardPage } from './pages/DashboardPage'
 
 function App() {
 
   const tabItems: TabsProps['items'] = [
     {
       key: '1',
-      label: 'Current month',
+      label: 'Текущий месяц',
       children: <MainPage />
     },
     {
       key: '2',
-      label: 'Settings',
+      label: 'Настройки',
       children: <SettingsPage />
-      
+    },
+    {
+      key: '3',
+      label: 'Графики',
+      children: <DashboardPage />
     }
+
   ]
 
   return (

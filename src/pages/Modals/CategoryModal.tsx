@@ -1,8 +1,10 @@
-import { Alert, Checkbox, Form, Input, Modal } from 'antd'
+import { Alert, Checkbox, DatePicker, Form, Input, Modal } from 'antd'
 import * as React from 'react'
 import { useCategoryStore, useFetchStore, useModalStore } from '../../store/store'
-import { type IError, type ICategory, type IFetchStore } from '../../types/types'
+import { type IError, type ICategory, type IFetchStore, type ICategoryMonth } from '../../types/types'
 import { setFormValue } from './utilityFunctions'
+import type { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 
 export const CategoryModal = () => {
 
@@ -14,10 +16,22 @@ export const CategoryModal = () => {
   const initialFormState: ICategory = {
     name: "",
     limit: 0,
-    isPrimary: false
+    isPrimary: false,
+    categoryMonth: {
+      month: new Date().getMonth(),
+      year: new Date().getFullYear()
+    }
+    
   }
   const [formState, setFormState] = React.useState(initialFormState)
   const [error, setError] = React.useState<IError | null>(null)
+
+  const onDateChange = (date: Dayjs) => {
+    handleChangeFormState("categoryMonth",  {
+      month: date.month(),
+      year: date.year()
+    })
+  }
   
   const updateCategory = () => {
     fetchStore[`${data?.formType as keyof IFetchStore}`]({...formState, id: data?.categoryData?.id})
@@ -30,13 +44,11 @@ export const CategoryModal = () => {
       }
     )
     .catch((err:any) => {
-      console.log("err: ", err);
-      
       setError(err.response.data)}) 
   }
 
 
-  const handleChangeFormState = (field: keyof ICategory, value: string | boolean) => {
+  const handleChangeFormState = (field: keyof ICategory, value: string | number | boolean | ICategoryMonth) => {
     setFormValue(formState, field, value, setFormState)
   }
 
@@ -45,10 +57,13 @@ export const CategoryModal = () => {
       name: data?.categoryData?.name || initialFormState.name,
       limit: data?.categoryData?.limit || initialFormState.limit,
       isPrimary: data?.categoryData?.isPrimary || initialFormState.isPrimary,
-      originalName: data?.categoryData?.originalName || undefined
+      categoryMonth: {
+        month: data?.categoryData?.categoryMonth.month || initialFormState.categoryMonth.month,
+        year: data?.categoryData?.categoryMonth.year || initialFormState.categoryMonth.year,
+      }
+      
   } : initialFormState)
   }, [isOpen, data])
-
   return (
     <Modal
       open={isOpen}
@@ -87,6 +102,9 @@ export const CategoryModal = () => {
                 }}
                 placeholder='limit'
               />
+            </Form.Item>
+            <Form.Item>
+              <DatePicker onChange={onDateChange} value={dayjs(new Date(formState.categoryMonth.year, formState.categoryMonth.month, 1))} picker="month" />
             </Form.Item>
              <Form.Item>
               <Checkbox

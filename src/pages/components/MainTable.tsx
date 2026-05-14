@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { TableProps } from 'antd';
 import { Table } from 'antd';
 import type { IEntry } from '../../types/types';
-import { useEntryStore, useModalStore } from '../../store/store';
+import { useEntryStore } from '../../store/store';
 
 
 const MainTable: React.FC = () => {
@@ -12,31 +12,36 @@ const MainTable: React.FC = () => {
 
   React.useEffect(() => {
     setData(entriesData.entries.map(e => {
-      return {...e, date: new Date(e.date).toLocaleString("ru-RU")} as any
+      return {...e, date: new Date(e.date).toLocaleString("ru-RU")} as IEntry
     }))
   }, [entriesData.entries])
 
 
   const columns = [
     {
-      title: 'date',
+      title: 'Дата',
       dataIndex: 'date',
       width: '20%',
     },
     {
-      title: 'name',
+      title: 'Название траты',
       dataIndex: 'name',
-      width: '30%',
+      width: '20%',
     },
     {
-      title: 'sum',
+      title: 'Сумма',
       dataIndex: 'sum',
-      width: '15%',
+      width: '5%',
     },
     {
-      title: "category",
+      title: "Категория",
       dataIndex: 'categoryName',
-      width: '40%',
+      width: '20%',
+    },
+      {
+      title: "Заметки",
+      dataIndex: 'info',
+      width: '35%',
     },
   ];
 
@@ -57,7 +62,8 @@ const MainTable: React.FC = () => {
           padding: "3px",
           paddingLeft: "10px",
           backgroundColor: "#e1e7eeff",
-          fontSize: "0.875rem"
+          fontSize: "0.875rem",
+          textWrap: "wrap"
         }
       }),
     };

@@ -23,22 +23,28 @@ export interface IApiRequestConfig<T = any> {
   updateAfterRequest?: boolean
 }
 
+export interface ICategoryMonth {
+    month: number,
+    year: number
+  }
+
 export interface ICategory {
   id?: number,
   name: string,
   isPrimary: boolean,
   limit: number,
-  originalName?: string
+  categoryMonth: ICategoryMonth
 }
 
-export type TCategoryRecord = Omit<ICategory, "isPrimary"> & {currentSpent?: number, left?: number}
+export type TCategoryRecord = ICategory & {currentSpent?: number, left?: number}
 
 export interface IEntry {
   id: number,
-  date: number,
+  date: number | string,
   name: string,
   sum: number | '',
-  category: ICategory
+  category: ICategory,
+  info: string
 }
 
 export interface IEntryStore {
